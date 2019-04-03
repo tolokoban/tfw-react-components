@@ -46,7 +46,7 @@ export default class Button extends React.Component<IButtonProps, {}> {
             classes.push(warning ? "thm-fgS" : "thm-fgP");
         }
         else {
-            classes.push("thm-ele-button");
+            if (enabled) classes.push("thm-ele-button");
             classes.push(warning ? "thm-bgS" : "thm-bgP");
         }
         if (small) classes.push("small");
@@ -56,14 +56,14 @@ export default class Button extends React.Component<IButtonProps, {}> {
             <button
                 className={classes.join(" ")}
                 disabled={!enabled}
-                onClick={p.onClick} >
+                onClick={p.onClick}>
                 {icon.length > 0
                     ? <Icon content={icon}
                         animate={wait}
                         size={`${small ? 20 : 28}px`} />
                     : null}
                 {label.length > 0
-                    ? <div className="text" >{label}</div>
+                    ? <div className="text" > {label} </div>
                     : null}
             </button>);
     }

@@ -10,6 +10,11 @@ button.tfw-view-checkbox {
     cursor: pointer;
 }
 
+button.tfw-view-checkbox.wide {
+    display: flex;
+    width: 100%;
+}
+
 button.tfw-view-checkbox>label {
     order: 1;
     opacity: .6;
@@ -22,7 +27,7 @@ button.tfw-view-checkbox>label {
     cursor: pointer;
 }
 
-button.tfw-view-checkbox.inverted>label {
+button.tfw-view-checkbox.back>label {
     order: -1;
 }
 

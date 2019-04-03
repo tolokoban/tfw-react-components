@@ -32,15 +32,20 @@ export default class Checkbox extends React.Component<ICheckboxProps, {}> {
     render() {
         const label = castString(this.props.label, "");
         const value = castBoolean(this.props.value, false);
+        const wide = castBoolean(this.props.wide, false);
+        const back = castBoolean(this.props.back, false);
         const classes = ["tfw-view-checkbox"];
         if (value) classes.push("ok");
+        if (wide) classes.push("wide");
+        if (back) classes.push("back");
 
-        return (<button className={classes.join(" ")} onClick={this.handleChange}>
-            <div className="pin">
-                <div className={`thm-ele-button bar ${value ? "thm-bgSL" : "thm-bg0"}`}></div>
-                <div className={`thm-ele-button btn ${value ? "thm-bgS" : "thm-bg0"}`}></div>
+        return (<button className={classes.join(" ")} onClick={this.handleChange} >
+            <div className="pin" >
+                <div className={`thm-ele-button bar ${value ? "thm-bgSL" : "thm-bg1"}`}> </div>
+                <div className={`thm-ele-button btn ${value ? "thm-bgS" : "thm-bg0"}`
+                }> </div>
             </div>
-            <label>{label}</label>
+            <label >{label}</label>
         </button>);
     }
 }

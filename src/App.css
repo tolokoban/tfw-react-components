@@ -45,3 +45,14 @@ div.App>div {
 div.App>div div.page {
     padding: 1em;
 }
+
+div.App>div div.page pre {
+    margin: .5em;
+    padding: .5em;
+}
+
+div.App>div div.page code {
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--thm-bgSD);
+}

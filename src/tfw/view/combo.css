@@ -1,7 +1,7 @@
 .tfw-view-combo {
     display: inline-flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: stretch;
     cursor: pointer;
     border: none;
@@ -20,7 +20,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     font-size: 80%;
     height: 16px;
     max-height: 16px;
@@ -40,7 +40,6 @@
     flex-direction: row;
     justify-content: space-between;
     flex: 1 1;
-    background: #fff;
     height: 32px;
     min-height: 32px;
     max-height: 32px;
@@ -80,11 +79,9 @@
 
 body>.tfw-view-combo-list {
     position: fixed;
-    background: #fff;
 }
 
 .tfw-view-combo>.button>div.list-container>.tfw-view-combo-list {
-    background: #fff;
     transition: transform .2s;
     transform: translateY(0);
 }
@@ -107,7 +104,7 @@ body>.tfw-view-combo-screen>div>div,
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     height: 32px;
     max-height: 32px;
     min-height: 32px;

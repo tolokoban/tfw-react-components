@@ -10,22 +10,22 @@ export default class PageButton extends React.Component<{}, {}> {
 
     render() {
         return (
-            <div className="page">
-                <Fieldset label="Input">
+            <div className="page" >
+                <Fieldset label="Input" >
                     <ul>
                         <li>
-                            <b>onClick(tag: any)</b>: emitted only if the button is enabled, on click and on
+                            <code>onClick(tag: any) </code>: emitted only if the button is enabled, on click and on
                             <em>Enter</em> or <em>Space</em>.
                         </li>
-                        <li><b>label</b> (string)</li>
-                        <li><b>icon</b> (string)</li>
-                        <li><b>wide</b> (boolean)</li>
-                        <li><b>wait</b> (boolean)</li>
-                        <li><b>flat</b> (boolean)</li>
-                        <li><b>small</b> (boolean)</li>
-                        <li><b>warning</b> (boolean)</li>
-                        <li><b>enabled</b> (boolean)</li>
-                        <li><b>tag</b> (any): Any data which will be used as argument for the onClick handler.</li>
+                        < li ><code>label</code> (string)</li>
+                        <li><code>icon</code> (string)</li>
+                        <li><code>wide</code> (boolean)</li>
+                        <li><code>wait</code> (boolean)</li>
+                        <li><code>flat</code> (boolean)</li>
+                        <li><code>small</code> (boolean)</li>
+                        <li><code>warning</code> (boolean)</li>
+                        <li><code>enabled</code> (boolean)</li>
+                        <li><code>tag</code> (any): Any data which will be used as argument for the onClick handler.</li>
                     </ul>
                 </Fieldset>
                 <div>
@@ -34,11 +34,11 @@ export default class PageButton extends React.Component<{}, {}> {
                     <Button onClick={this.handleClick} label="icon" icon="gear" />
                     <Button onClick={this.handleClick} label="warning" enabled={false} warning={true} />
                     <Button onClick={this.handleClick} label="Disabled" icon="gear" enabled={false} />
-                    <pre>{`<Button label="label only"/>`}</pre>
-                    <pre>{`<Button label="warning" warning={true}/>`}</pre>
-                    <pre>{`<Button label="icon" icon="gear"/>`}</pre>
-                    <pre>{`<Button label="warning" enabled={false} warning={true}/>`}</pre>
-                    <pre>{`<Button label="Disabled" icon="gear" enabled={false}/>`}</pre>
+                    <pre className="thm-bgPL">{`<Button label="label only"/>
+<Button label="warning" warning={true}/>
+<Button label="icon" icon="gear"/>
+<Button label="warning" enabled={false} warning={true}/>
+<Button label="Disabled" icon="gear" enabled={false}/>`}</pre>
                 </div>
                 <div>
                     <Button onClick={this.handleClick} icon="refresh" />
@@ -46,43 +46,43 @@ export default class PageButton extends React.Component<{}, {}> {
                     <Button onClick={this.handleClick} icon="refresh" warning={true} />
                     <Button onClick={this.handleClick} icon="refresh" flat={true} />
                     <Button onClick={this.handleClick} icon="refresh" small={true} />
-                    <pre>{`<Button icon="refresh" />`}</pre>
-                    <pre>{`<Button icon="refresh" wait={true} />`}</pre>
-                    <pre>{`<Button icon="refresh" warning={true} />`}</pre>
-                    <pre>{`<Button icon="refresh" flat={true}/>`}</pre>
-                    <pre>{`<Button icon="refresh" small={true}/>`}</pre>
+                    <pre className="thm-bgPL">{`<Button icon="refresh" />
+<Button icon="refresh" wait={true} />
+<Button icon="refresh" warning={true} />
+<Button icon="refresh" flat={true}/>
+<Button icon="refresh" small={true}/>`}</pre>
                 </div>
-                <hr />
+                < hr />
                 <div>
                     <Button onClick={this.handleClick} label="flat" flat={true} />
                     <Button onClick={this.handleClick} label="confirm" icon="ok" flat={true} /> `
                     <Button onClick={this.handleClick} label="Delete" flat={true} warning={true} icon="delete" />
-                    <Button onClick={this.handleClick} label="confirm" enabled={false} icon="ok" flat={true} />`
-                                < Button onClick={this.handleClick} label="Delete" enabled={false} flat={true} warning={true} icon="delete" />
-                    <pre>{`<Button label="flat" flat={true}/>`}</pre>
-                    <pre>{`<Button label="confirm" icon="ok" flat={true}/>`}</pre>
-                    <pre>{`<Button label="Warning!" flat={true} warning={true}/>`}</pre>
-                    <pre>{`<Button label="Delete" flat={true} warning={true} icon="delete"/>`}</pre>
-                    <pre>{`<Button label="confirm" enabled={false} icon="ok" flat={true}/>`}</pre>
-                    <pre>{`<Button label="Delete" enabled={false} flat={true} warning={true} icon="delete"/>`}</pre>
+                    <Button onClick={this.handleClick} label="confirm" enabled={false} icon="ok" flat={true} />
+                    <Button onClick={this.handleClick} label="Delete" enabled={false} flat={true} warning={true} icon="delete" />
+                    <pre className="thm-bgPL">{`<Button label="flat" flat={true}/>
+<Button label="confirm" icon="ok" flat={true}/>
+<Button label="Warning!" flat={true} warning={true}/>
+<Button label="Delete" flat={true} warning={true} icon="delete"/>
+<Button label="confirm" enabled={false} icon="ok" flat={true}/>
+<Button label="Delete" enabled={false} flat={true} warning={true} icon="delete"/>`}</pre>
                 </div>
-                <hr />
+                < hr />
                 <div>
                     <Button onClick={this.handleClick} label="small" small={true} />
                     <Button onClick={this.handleClick} label="small & flat" small={true} flat={true} />
                     <Button onClick={this.handleClick} label="small" icon="wait" small={true} />
                     <Button onClick={this.handleClick} label="small" icon="wait" small={true} wait={true} />
                     <Button onClick={this.handleClick} label="small" warning={true} small={true} />
-                    <pre>{`<Button label="small" small={true}/>`}</pre>
-                    <pre>{`<Button label="small & flat" small={true} flat={true}/>`}</pre>
-                    <pre>{`<Button label="small" icon="wait" small={true}/>`}</pre>
-                    <pre>{`<Button label="small" icon="wait" small={true} wait={true}/>`}</pre>
-                    <pre>{`<Button label="small" warning={true} small={true} />`}</pre>
+                    <pre className="thm-bgPL">{`<Button label="small" small={true}/>
+<Button label="small & flat" small={true} flat={true}/>
+<Button label="small" icon="wait" small={true}/>
+<Button label="small" icon="wait" small={true} wait={true}/>
+<Button label="small" warning={true} small={true} />`}</pre>
                 </div>
-                <hr />
+                < hr />
                 <div>
                     <Button onClick={this.handleClick} label="Wide Button" icon="link" wide={true} />
-                    <pre>{`<Button label="Wide Button" icon="link" wide={true} />`}</pre>
+                    <pre className="thm-bgPL">{`<Button label="Wide Button" icon="link" wide={true} />`}</pre>
                 </div>
             </div >
         )
