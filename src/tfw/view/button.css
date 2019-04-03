@@ -21,6 +21,19 @@ button.tfw-view-button {
     font-weight: bold;
 }
 
+button.tfw-view-button.floating {
+    border-radius: 100%;
+    width: 56px;
+    height: 56px;
+}
+
+button.tfw-view-button.floating.small {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    max-height: 40px;
+}
+
 button.tfw-view-button.wide {
     width: calc(100% - 8px);
     display: flex;

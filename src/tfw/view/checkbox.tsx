@@ -1,6 +1,8 @@
 import * as React from "react";
-import "../theme.css";
 import "./checkbox.css";
+
+import castString from "../converter/string"
+import castBoolean from "../converter/boolean"
 
 
 interface IBooleanSlot {
@@ -16,35 +18,29 @@ interface ICheckboxProps {
 export default class Checkbox extends React.Component<ICheckboxProps, {}> {
     constructor(props: ICheckboxProps) {
         super(props);
-        this.onChange = this.onChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    private onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    private handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const slot = this.props.onChange;
         if (typeof slot === 'function') {
-            const checked = (event.target as HTMLInputElement).checked;
-            slot(checked);
+            const value = castBoolean(this.props.value, false);
+            slot(!value);
         }
     }
 
     render() {
-        const { value, label } = this.props;
-        const id = nextId();
+        const label = castString(this.props.label, "");
+        const value = castBoolean(this.props.value, false);
+        const classes = ["tfw-view-checkbox"];
+        if (value) classes.push("ok");
 
-        return (<div className="tfw-view-checkbox">
-            <input
-                id={id}
-                type="checkbox"
-                onChange={this.onChange}
-                defaultChecked={value} />
-            <label htmlFor={id}>{label}</label>
-        </div>);
+        return (<button className={classes.join(" ")} onClick={this.handleChange}>
+            <div className="pin">
+                <div className={`thm-ele-button bar ${value ? "thm-bgSL" : "thm-bg0"}`}></div>
+                <div className={`thm-ele-button btn ${value ? "thm-bgS" : "thm-bg0"}`}></div>
+            </div>
+            <label>{label}</label>
+        </button>);
     }
-}
-
-
-
-let globalId = 0;
-function nextId() {
-    return `tfw-view-checkbox-${globalId++}`;
 }

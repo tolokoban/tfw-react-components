@@ -41,3 +41,7 @@ div.App>div {
     overflow: auto;
     padding: 1rem;
 }
+
+div.App>div div.page {
+    padding: 1em;
+}

@@ -18,6 +18,17 @@ interface IButtonProps {
 }
 
 export default class Button extends React.Component<IButtonProps, {}> {
+    constructor(props: IButtonProps) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        const slot = this.props.onClick;
+        if (typeof slot !== 'function') return;
+        slot(this.props.tag);
+    }
+
     render() {
         const p = this.props,
             label = castString(p.label, ""),
@@ -39,6 +50,7 @@ export default class Button extends React.Component<IButtonProps, {}> {
             classes.push(warning ? "thm-bgS" : "thm-bgP");
         }
         if (small) classes.push("small");
+        if (label.length === 0) classes.push("floating");
 
         return (
             <button
