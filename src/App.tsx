@@ -3,6 +3,7 @@ import Theme from "./tfw/theme"
 import Stack from "./tfw/layout/stack"
 import Combo from "./tfw/view/combo"
 import Button from "./tfw/view/button"
+import PageCombo from "./page/combo"
 import PageButton from "./page/button"
 import PageCheckbox from "./page/checkbox"
 
@@ -48,19 +49,19 @@ export default class App extends React.Component<{}, IAppState> {
                         <div key="dark">Dark</div>
                     </Combo>
                     <hr />
-                    <div>{
-                        [
-                            this.link("button"),
-                            this.link("checkbox"),
-                            this.link("color-button-list"),
-                            this.link("color-button"),
-                            this.link("combo"),
-                            this.link("icon"),
-                            this.link("input"),
-                            this.link("pane")
-                        ]}</div>
+                    <div>{[
+                        this.link("button"),
+                        this.link("checkbox"),
+                        this.link("color-button-list"),
+                        this.link("color-button"),
+                        this.link("combo"),
+                        this.link("icon"),
+                        this.link("input"),
+                        this.link("pane")
+                    ]}</div>
                 </nav>
                 <Stack value={this.state.page}>
+                    <PageCombo key="combo" />
                     <PageButton key="button" />
                     <PageCheckbox key="checkbox" />
                 </Stack>

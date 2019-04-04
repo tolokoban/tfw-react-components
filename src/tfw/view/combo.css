@@ -82,7 +82,7 @@ body>.tfw-view-combo-list {
 }
 
 .tfw-view-combo>.button>div.list-container>.tfw-view-combo-list {
-    transition: transform .2s;
+    transition: transform .5s;
     transform: translateY(0);
 }
 
@@ -137,4 +137,9 @@ body>.tfw-view-combo-screen>div>div,
 
 .tfw-view-combo-screen>div>div {
     box-shadow: 0 1px rgba(0, 0, 0, .1) inset;
+}
+
+body>.tfw-view-combo-screen div.item.selected {
+    box-shadow: 0 0 0px 3px var(--thm-bgSL) inset;
+    background: var(--thm-bgSL);
 }

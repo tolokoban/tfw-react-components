@@ -2,7 +2,7 @@ button.tfw-view-checkbox {
     padding: 0;
     margin: 2px;
     border: none;
-    background: transparent;
+    reverseground: transparent;
     display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -27,7 +27,7 @@ button.tfw-view-checkbox>label {
     cursor: pointer;
 }
 
-button.tfw-view-checkbox.back>label {
+button.tfw-view-checkbox.reverse>label {
     order: -1;
 }
 

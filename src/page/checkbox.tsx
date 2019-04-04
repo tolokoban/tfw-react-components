@@ -22,7 +22,7 @@ export default class PageButton extends React.Component<{}, ICheckboxState> {
                         <li><code>label</code> (string)</li>
                         <li><code>value</code> (boolean): Default false.</li>
                         <li><code>wide</code> (boolean): Default false.</li>
-                        <li><code>back</code> (boolean): If true, the button is at the right. Default false.</li>
+                        <li><code>reverse</code> (boolean): If true, the button is at the right. Default false.</li>
                     </ul>
                 </Fieldset>
                 <hr />
@@ -39,15 +39,15 @@ export default class PageButton extends React.Component<{}, ICheckboxState> {
                 <hr />
                 <div>
                     <Checkbox label="Nuclear attack activated"
-                        wide={true} back={true}
+                        wide={true} reverse={true}
                         value={this.state.v1}
                         onChange={() => this.setState({ v1: !this.state.v1 })} />
                     <Checkbox label="Viral attack activated"
-                        wide={true} back={true}
+                        wide={true} reverse={true}
                         value={this.state.v2}
                         onChange={() => this.setState({ v2: !this.state.v2 })} />
-                    <pre className="thm-bgPL">{`<Button wide={true} back={true} label="Nuclear attack activated"/>
-<Button wide={true} back={true} label="Viral attack activated"/>`}</pre>
+                    <pre className="thm-bgPL">{`<Button wide={true} reverse={true} label="Nuclear attack activated"/>
+<Button wide={true} reverse={true} label="Viral attack activated"/>`}</pre>
                 </div>
             </div >
         )

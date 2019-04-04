@@ -4,6 +4,8 @@ import castString from "../converter/string"
 import castBoolean from "../converter/boolean"
 import castStringArray from "../converter/string-array"
 import Icon from "./icon"
+import Gesture from "../gesture"
+import EscapeHandler from "../escape-handler"
 
 interface IComboProps {
     label?: string;
@@ -17,10 +19,8 @@ interface IComboProps {
 export default class Combo extends React.Component<IComboProps, {}> {
     list = React.createRef<HTMLDivElement>()
     button = React.createRef<HTMLDivElement>()
-    listContainer = React.createRef<HTMLDivElement>()
 
     keys: string[] = []
-    items: React.ReactElement<HTMLDivElement> = []
 
     constructor(props: IComboProps) {
         super(props);
@@ -32,12 +32,56 @@ export default class Combo extends React.Component<IComboProps, {}> {
     }
 
     expand() {
-        const index = this.keys.indexOf(this.props.value);
-        const nextIndex = (index + 1) % this.keys.length;
-        const slot = this.props.onChange;
-        if (typeof slot === 'function') {
-            slot(this.keys[nextIndex]);
+        if (this.keys.length < 3) {
+            // With two items, clicking will immediatly switch to the next one.
+            const index = this.keys.indexOf(this.props.value || "");
+            const nextIndex = (index + 1) % this.keys.length;
+            const slot = this.props.onChange;
+            if (typeof slot === 'function') {
+                slot(this.keys[nextIndex]);
+            }
+            return;
         }
+
+        const list = this.list.current;
+        const button = this.button.current;
+        if (!list || !button) return;
+        let { left, top, height } = list.getBoundingClientRect();
+        const { width } = button.getBoundingClientRect();
+        height = Math.min(height, window.innerHeight - 32);
+        if (top + height > window.innerHeight) {
+            top -= 32 * Math.ceil(window.innerHeight - top - height / 32);
+        }
+        const screen = document.createElement("div");
+        screen.className = "tfw-view-combo-screen";
+        const bigList = document.createElement("div");
+        bigList.className = "thm-ele-nav thm-bg3";
+        bigList.innerHTML = list.innerHTML;
+        if (top < 0) {
+            top += 32 * Math.ceil(-top / 32);
+        }
+        bigList.style.top = `${top}px`;
+        bigList.style.left = `${left}px`;
+        bigList.style.width = `${width}px`;
+        bigList.style.height = `${height}px`;
+        screen.appendChild(bigList);
+        document.body.appendChild(screen);
+        EscapeHandler.add(() => document.body.removeChild(screen));
+        Gesture(screen).on({ tap: () => EscapeHandler.fire() });
+        Gesture(bigList).on({
+            tap: (evt) => {
+                if (!evt || typeof evt.y === 'undefined') return;
+                const scroll = bigList.scrollTop;
+                const index = Math.floor((evt.y + scroll) / 32);
+                const value = this.keys[index];
+                EscapeHandler.fire()
+                requestAnimationFrame(() => {
+                    if (typeof this.props.onChange === 'function') {
+                        this.props.onChange(value)
+                    }
+                });
+            }
+        });
     }
 
     render() {
@@ -50,13 +94,14 @@ export default class Combo extends React.Component<IComboProps, {}> {
         const classes = ["tfw-view-combo", "thm-bg3", "thm-ele-button"];
         const items = children.map(item => {
             const key = item.key;
-            return (<div className="item" key={key} > {item} </div>);
+            let className = "item";
+            if (key === p.value) className += " selected";
+            return (<div className={className} key={key} > {item} </div>);
         });
 
         if (wide) classes.push("wide");
 
         this.keys = keys;
-        this.items = items;
 
         const index = getIndex(keys, value);
 
@@ -65,8 +110,7 @@ export default class Combo extends React.Component<IComboProps, {}> {
                 onClick={this.handleClick}>
                 {label.length > 0 ? <header className="thm-bgPD">{label}</header> : null}
                 <div ref={this.button} className="button">
-                    <div ref={this.listContainer}
-                        className="list-container"
+                    <div className="list-container"
                         style={{
                             transform: `translateY(-${32 * index}px)`
                         }}>
@@ -117,4 +161,17 @@ function ensureGoodKeys(keys: string[] | undefined, children: React.ReactElement
     });
 
     return goodKeys;
+}
+
+
+function onTap(elem: HTMLElement, handler: () => void) {
+    const slot = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        elem.removeEventListener("mousedown", slot);
+        elem.removeEventListener("touchdown", slot);
+        handler();
+    };
+    elem.addEventListener("mousedown", slot, false);
+    elem.addEventListener("touchdown", slot, false);
 }

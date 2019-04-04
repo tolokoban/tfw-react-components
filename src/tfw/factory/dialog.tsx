@@ -9,6 +9,7 @@ export default {
 
 import * as React from "react"
 import ReactDOM from 'react-dom'
+import EscapeHandler from "../escape-handler"
 import "./dialog.css"
 
 import Button from "../view/button"
@@ -16,53 +17,49 @@ import Button from "../view/button"
 import Intl from "../intl";
 const _ = Intl.make(require("./dialog.yaml"));
 
-const gDialogs = [];
-
-document.addEventListener("keydown", (event) => {
-    if (gDialogs.length === 0) return;
-    if (event.key !== 'Escape') return;
-    event.preventDefault();
-    event.stopPropagation();
-    const dialog = gDialogs[gDialogs.length - 1];
-    dialog.hide();
-}, true);
+interface IOptions {
+    onClose?: () => void;
+}
 
 class Dialog {
-    private screen: HTMLElement;
+    private _screen: HTMLElement;
 
-    constructor() {
+    constructor(private _options: IOptions = {}) {
         const screen = document.createElement("div");
         screen.className = "tfw-factory-dialog";
         document.body.appendChild(screen);
-        this.screen = screen;
+        this._screen = screen;
         this.hide = this.hide.bind(this);
-        gDialogs.push(this);
+        EscapeHandler.add(() => this._hide());
     }
 
     show(body: React.Component) {
-        ReactDOM.render(body, this.screen);
-        setTimeout(() => this.screen.classList.add("show"), 10);
+        ReactDOM.render(body, this._screen);
+        setTimeout(() => this._screen.classList.add("show"), 10);
     }
 
     hide() {
-        const screen = this.screen;
+        EscapeHandler.fire();
+    }
+
+    _hide() {
+        const screen = this._screen;
         screen.classList.remove("show");
         setTimeout(() => {
             document.body.removeChild(screen);
         }, 200);
-        gDialogs.pop();
-        if (typeof this.onClose === 'function') {
-            this.onclose();
+        const onClose = this._options.onClose;
+        if (typeof onClose === 'function') {
+            requestAnimationFrame(onClose);
         }
     }
 }
 
-function alert(message: string, onClose: () => void = null) {
-    const dialog = new Dialog();
-    dialog.onClose = onClose;
+function alert(message: string, onClose: () => void | null = null) {
+    const dialog = new Dialog({ onClose });
     dialog.show(
         <div className="thm-ele-dialog thm-bg2" >
-            <div>{message} </div>
+            <div>{message}</div>
             <footer className="thm-bg1" >
                 <Button
                     icon="close"

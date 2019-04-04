@@ -12,6 +12,8 @@ interface IBooleanSlot {
 interface ICheckboxProps {
     value?: boolean;
     label?: string;
+    wide?: boolean;
+    reverse?: boolean;
     onChange?: IBooleanSlot
 }
 
@@ -33,11 +35,11 @@ export default class Checkbox extends React.Component<ICheckboxProps, {}> {
         const label = castString(this.props.label, "");
         const value = castBoolean(this.props.value, false);
         const wide = castBoolean(this.props.wide, false);
-        const back = castBoolean(this.props.back, false);
+        const reverse = castBoolean(this.props.reverse, false);
         const classes = ["tfw-view-checkbox"];
         if (value) classes.push("ok");
         if (wide) classes.push("wide");
-        if (back) classes.push("back");
+        if (reverse) classes.push("reverse");
 
         return (<button className={classes.join(" ")} onClick={this.handleChange} >
             <div className="pin" >

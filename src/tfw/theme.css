@@ -17,6 +17,11 @@ hr {
     background-image: linear-gradient(to right, transparent, rgba(0, 0, 0, .5) 50%, transparent);
 }
 
+button {
+    font-size: inherit;
+    font-family: inherit;
+}
+
 /*********************/
 /* Responsive Design */
 @media (max-width: 319px) {
