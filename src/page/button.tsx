@@ -11,7 +11,7 @@ export default class PageButton extends React.Component<{}, {}> {
     render() {
         return (
             <div className="page" >
-                <Fieldset label="Input" >
+                <Fieldset label="Button" >
                     <ul>
                         <li>
                             <code>onClick(tag: any) </code>: emitted only if the button is enabled, on click and on

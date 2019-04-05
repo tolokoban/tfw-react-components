@@ -95,10 +95,11 @@ export default class Icon extends React.Component<IIconProps, {}> {
         if (flipH || flipV) {
             transform += `scale(${flipH ? -1 : 1},${flipV ? -1 : 1})`;
         }
-        const style = transform.length === 0 ? null : { transform };
+        const style: React.CSSProperties = { width: size, height: size };
+        if (transform.length > 0) style.transform = transform;
 
-        this.visible = visible;
         requestAnimationFrame(() => this.triggerVisibleAnimation());
+        this.visible = visible;
 
         return (
             <svg className={classes.join(" ")}

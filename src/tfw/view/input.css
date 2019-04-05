@@ -12,6 +12,12 @@ div.tfw-view-input label {
     padding: 2px .25rem;
 }
 
+div.tfw-view-input div.error {
+    font-size: 80%;
+    font-weight: bold;
+    padding: 2px .25rem;
+}
+
 div.tfw-view-input input {
     font-size: 1rem;
     border: none;

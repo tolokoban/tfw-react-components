@@ -6,6 +6,9 @@ import castBoolean from "../converter/boolean"
 import castString from "../converter/string"
 import Debouncer from "../debouncer"
 
+import Intl from "../intl"
+const _ = Intl.make(require("./input.yaml"));
+
 interface IStringSlot {
     (value: string): void;
 }
@@ -19,15 +22,22 @@ interface IInputProps {
     type?: "text" | "password" | "submit" | "color" | "date"
     | "datetime-local" | "email" | "month" | "number" | "range"
     | "search" | "tel" | "time" | "url" | "week";
+    validator?: (value: string) => any;
     onChange?: IStringSlot
 }
 
-export default class Input extends React.Component<IInputProps, {}> {
+interface IInputState {
+    error?: string;
+}
+
+export default class Input extends React.Component<IInputProps, IInputState> {
     private timerId: number;
     readonly input: React.RefObject<HTMLInputElement>;
+    value: string = "";
 
     constructor(props: IInputProps) {
         super(props);
+        this.state = {};
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -52,7 +62,10 @@ export default class Input extends React.Component<IInputProps, {}> {
         if (!input.classList) return;
         input.classList.remove("thm-bg3");
         input.classList.add("thm-bgSL");
-        input.setSelectionRange(0, input.value.length);
+        if (this.props.type !== 'number') {
+            // setSelectionRange fails for "number" input.
+            input.setSelectionRange(0, input.value.length);
+        }
     }
 
     onBlur(event: React.FocusEvent<HTMLInputElement>): void {
@@ -64,31 +77,69 @@ export default class Input extends React.Component<IInputProps, {}> {
     }
 
     onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        if (!this.checkValidity(event.target.value)) return;
+
         const
             p = this.props,
             slot = p.onChange,
             delay = castInteger(p.delay, 300);
 
         event.preventDefault();
+        this.value = event.target.value;
 
         if (typeof slot === 'function') {
             if (this.timerId !== 0) window.clearTimeout(this.timerId);
-            const value = event.target.value;
-            this.timerId = window.setTimeout(() => slot(value), delay);
+            this.timerId = window.setTimeout(() => {
+                const value = this.value;
+                if (this.props.type === 'number') {
+                    const num = parseFloat(value);
+                    console.log("This is a number:", num, typeof num);
+                    slot(num)
+                } else {
+                    slot(value)
+                }
+            }, delay);
         }
     }
 
+    checkValidity(value: string) {
+        let validator = this.props.validator;
+        this.setState({ error: null });
+        if (typeof validator !== 'function') {
+            if (this.props.type !== 'number') return true;
+            validator = NUMBER_VALIDATOR;
+        }
+        console.log("validator =", validator);
+
+        try {
+            const result = validator(value);
+            console.log("result =", result);
+
+            if (result === true) return true;
+            if (typeof result === "string") {
+                this.setState({ error: result });
+            }
+        } catch (ex) {
+            console.error(`<Input> Unable to validate "${value}"!`, ex);
+        }
+        return false;
+    }
+
     componentDidMount() {
+        console.log("MOUNT");
         this.setFocus();
     }
 
     componentDidUpdate(oldProps: IInputProps) {
+        console.log("UPDATE");
         const
             newProps = this.props,
             input = this.input ? this.input.current : null;
 
-        if (input) input.value = castString(newProps.value, "");
-        this.setFocus();
+        //if (input) input.value = castString(newProps.value, "");
+        if (castBoolean(this.props.focus, false)) {
+            this.setFocus();
+        }
     }
 
     render() {
@@ -98,10 +149,12 @@ export default class Input extends React.Component<IInputProps, {}> {
             label = castString(p.label, ""),
             value = castString(p.value, ""),
             size = Math.max(1, castInteger(p.size, 8)),
+            error = this.state.error,
             id = nextId();
-
+        const header = (error ? <div className="thm-bgSD error">{error}</div> :
+            (label ? (<label htmlFor={id} className="thm-bgPD">{label}</label>) : null));
         return (<div className="tfw-view-input thm-ele-button" >
-            {label ? (<label htmlFor={id} className="thm-bgPD">{label}</label>) : null}
+            {header}
             <input
                 ref={this.input}
                 className="thm-bg3"
@@ -121,3 +174,6 @@ let globalId = 0;
 function nextId() {
     return `tfw-view-input-${globalId++}`;
 }
+
+
+const NUMBER_VALIDATOR = (value: string) => isNaN(parseFloat(value)) ? _('nan') : true;
