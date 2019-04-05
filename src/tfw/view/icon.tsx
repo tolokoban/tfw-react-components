@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import castBoolean from "../converter/boolean";
+import castInteger from "../converter/integer";
 import castUnit from "../converter/unit";
 import { iconsBook, TIconDefinition } from "../icons";
 import "./icon.css";
@@ -15,6 +16,7 @@ interface IIconProps {
     animate?: boolean;
     flipH?: boolean;
     flipV?: boolean;
+    rotate?: number;
     pen0?: EnumPenColor;
     pen1?: EnumPenColor;
     pen2?: EnumPenColor;
@@ -76,16 +78,24 @@ export default class Icon extends React.Component<IIconProps, {}> {
             flipV = castBoolean(p.flipV, false),
             size = castUnit(p.size, "28px"),
             content = castContent(p.content),
+            rotate = castInteger(p.rotate, 0),
             onClick = p.onClick,
             classes = ["tfw-view-icon"];
         const svgContent = createSvgContent(content, p);
         if (!svgContent) return null;
 
         if (animate) classes.push("animate");
-        if (flipH) classes.push("flipH");
-        if (flipV) classes.push("flipV");
         if (visible) classes.push("zero");
         if (typeof onClick === 'function') classes.push("active");
+
+        let transform = "";
+        if (rotate !== 0) {
+            transform += `rotate(${rotate}deg) `;
+        }
+        if (flipH || flipV) {
+            transform += `scale(${flipH ? -1 : 1},${flipV ? -1 : 1})`;
+        }
+        const style = transform.length === 0 ? null : { transform };
 
         this.visible = visible;
         requestAnimationFrame(() => this.triggerVisibleAnimation());
@@ -97,7 +107,8 @@ export default class Icon extends React.Component<IIconProps, {}> {
                 preserveAspectRatio="xMidYMid"
                 width={size}
                 height={size}
-                onClick={onClick} >
+                onClick={onClick}
+                style={style}>
                 {svgContent}
                 < g strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" >
                     {createSvgContent(content, p)}

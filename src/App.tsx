@@ -3,22 +3,30 @@ import Theme from "./tfw/theme"
 import Stack from "./tfw/layout/stack"
 import Combo from "./tfw/view/combo"
 import Button from "./tfw/view/button"
+import PageIcon from "./page/icon"
 import PageCombo from "./page/combo"
 import PageButton from "./page/button"
 import PageCheckbox from "./page/checkbox"
+
+import Storage from "./tfw/storage"
 
 import "./tfw/font/josefin.css"
 import "./App.css";
 
 interface IAppState {
     page: string;
+    theme: string;
 }
 
 export default class App extends React.Component<{}, IAppState> {
     constructor(props: {}) {
         super(props);
         this.handleThemeChange = this.handleThemeChange.bind(this);
-        this.state = { page: "button", theme: "default" }
+        this.state = Storage.local.get("state", { page: "button", theme: "default" });
+    }
+
+    componentDidUpdate() {
+        Storage.local.set("state", this.state);
     }
 
     handleThemeChange(name: string) {
@@ -35,7 +43,6 @@ export default class App extends React.Component<{}, IAppState> {
     }
 
     render() {
-        const s = this.state;
         return (
             <div className="App thm-bg0">
                 <nav className="thm-ele-nav thm-bg2">
@@ -64,6 +71,7 @@ export default class App extends React.Component<{}, IAppState> {
                     <PageCombo key="combo" />
                     <PageButton key="button" />
                     <PageCheckbox key="checkbox" />
+                    <PageIcon key="icon" />
                 </Stack>
             </div>
         )

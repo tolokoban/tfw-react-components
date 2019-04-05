@@ -1,7 +1,7 @@
 import * as React from "react"
 import { iconsBook } from "../tfw/icons"
 import Icon from "../tfw/view/icon"
-import Flex from "../tfw/view/flex"
+import Flex from "../tfw/layout/flex"
 import Combo from "../tfw/view/combo"
 import Button from "../tfw/view/button"
 import Fieldset from "../tfw/view/Fieldset"

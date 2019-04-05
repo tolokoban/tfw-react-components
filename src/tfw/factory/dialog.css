@@ -11,6 +11,7 @@ div.tfw-factory-dialog {
     padding: 0;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -19,6 +20,12 @@ div.tfw-factory-dialog>div {
     transition: all .2s;
     transform: scale(0);
     opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    max-height: calc(100vh - 16px);
+    max-width: calc(100vw - 16px);
 }
 
 div.tfw-factory-dialog.show>div {
@@ -30,13 +37,30 @@ div.tfw-factory-dialog.show>div {
 div.tfw-factory-dialog.show>div>div {
     padding: .5rem;
     flex: 1 1 auto;
-    overflow-x: inherit;
-    overflow-y: auto;
+    overflow: auto;
+    overflow-wrap: anywhere;
 }
 
 div.tfw-factory-dialog>div>footer {
     display: flex;
-    flex: 0;
     justify-content: space-around;
     align-items: center;
+}
+
+div.tfw-factory-dialog>div>header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
+    min-height: 2rem;
+    max-height: 2rem;
+}
+
+div.tfw-factory-dialog>div>header>* {
+    margin: .5em;
+}
+
+div.tfw-factory-dialog>div>footer,
+div.tfw-factory-dialog>div>header {
+    flex: 0;
 }

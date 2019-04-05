@@ -3,7 +3,7 @@ import "./Fieldset.css"
 
 interface IFieldsetProps {
     label: string;
-    children: React.ReactElement<any>[];
+    children: React.ReactElement<any>[] | React.ReactElement<any>;
 }
 
 export default class Fieldset extends React.Component<IFieldsetProps, {}> {

@@ -2,7 +2,7 @@ button.tfw-view-checkbox {
     padding: 0;
     margin: 2px;
     border: none;
-    reverseground: transparent;
+    background: transparent;
     display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;

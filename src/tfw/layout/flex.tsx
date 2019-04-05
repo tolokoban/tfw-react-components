@@ -9,7 +9,7 @@ interface IFlexProp {
     wrap?: "nowrap" | "wrap" | "wrap-reverse";
     justifyContent?: "flex-start" | "flex-end" | "center" | "space-around" | "space-between" | "space-evenly";
     alignItems?: "stretch" | "flex-start" | "flex-end" | "center";
-    children: React.ReactElement<any>[];
+    children: React.ReactElement<any>[] | React.ReactElement<any>;
 }
 
 export default class Flex extends React.Component<IFlexProp, {}> {
