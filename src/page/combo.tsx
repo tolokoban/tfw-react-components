@@ -13,7 +13,7 @@ interface IComboState {
 export default class PageButton extends React.Component<{}, IComboState> {
     constructor(props: {}) {
         super(props);
-        this.state = { month: "nov", icon: "star" };
+        this.state = { month: "nov", icon: "star", two: "Y" };
 
     }
 
@@ -76,6 +76,14 @@ export default class PageButton extends React.Component<{}, IComboState> {
                     <p>The above example shows that you can put any element as children of a Combo,
                         provided it does not exceed 32px height.</p>
                 </div>
+                <hr />
+                <Flex>
+                    <Combo label="How are you?" value={this.state.two} onChange={two => this.setState({ two })}>
+                        <div key="Y">Never better!</div>
+                        <div key="N">I fell dizzy...</div>
+                    </Combo>
+                    <p>With only two items, we don't need to show the list.</p>
+                </Flex>
             </div>
         )
     }

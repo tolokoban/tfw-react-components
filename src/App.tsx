@@ -3,6 +3,7 @@ import Theme from "./tfw/theme"
 import Stack from "./tfw/layout/stack"
 import Combo from "./tfw/view/combo"
 import Button from "./tfw/view/button"
+import PageList from "./page/list"
 import PageIcon from "./page/icon"
 import PageCombo from "./page/combo"
 import PageButton from "./page/button"
@@ -64,6 +65,7 @@ export default class App extends React.Component<{}, IAppState> {
                         this.link("combo"),
                         this.link("icon"),
                         this.link("input"),
+                        this.link("list"),
                         this.link("pane")
                     ]}</div>
                 </nav>
@@ -72,6 +74,7 @@ export default class App extends React.Component<{}, IAppState> {
                     <PageButton key="button" />
                     <PageCheckbox key="checkbox" />
                     <PageIcon key="icon" />
+                    <PageList key="list" />
                 </Stack>
             </div>
         )

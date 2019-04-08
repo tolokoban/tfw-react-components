@@ -1,0 +1,45 @@
+div.tfw-view-list {
+    overflow: auto;
+    padding: 0;
+    margin: 1rem;
+    box-shadow: 0 4px 8px #000;
+    background: #ccc;
+    min-width: 280px;
+    max-height: 95vh;
+    /* To prevent a bug in Google Chrome */
+    overflow-anchor: none;
+}
+
+div.tfw-view-list>div {
+    margin: 0;
+    display: block;
+    width: 100%;
+    min-width: 100%;
+}
+
+div.tfw-view-list>div.body {
+    overflow: hidden;
+}
+
+div.tfw-view-list>div.body>div.item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+}
+
+div.tfw-view-list>div.body>div.item>*,
+div.tfw-view-list>div.body>div.item>div {
+    width: 100%;
+}
+
+div.tfw-view-list>div.space {
+    font-size: 0;
+    content: '.';
+    background-repeat: repeat-y;
+    background-position: 0 0;
+    background-size: 263px 36px;
+    background-image: url(./list/item-blur.jpg);
+}
