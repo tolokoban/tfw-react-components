@@ -1,4 +1,5 @@
 import * as React from "react";
+import Touchable from "../behavior/touchable"
 import "./checkbox.css";
 
 import castString from "../converter/string"
@@ -18,12 +19,22 @@ interface ICheckboxProps {
 }
 
 export default class Checkbox extends React.Component<ICheckboxProps, {}> {
+    readonly touchable: Touchable;
+    readonly ref;
+
     constructor(props: ICheckboxProps) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.touchable = new Touchable({ onTap: this.handleChange });
+        this.ref = React.createRef();
     }
 
-    private handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    componentDidMount() {
+        const button = this.ref.current;
+        if (button) this.touchable.element = button;
+    }
+
+    private handleChange(): void {
         const slot = this.props.onChange;
         if (typeof slot === 'function') {
             const value = castBoolean(this.props.value, false);
@@ -41,7 +52,7 @@ export default class Checkbox extends React.Component<ICheckboxProps, {}> {
         if (wide) classes.push("wide");
         if (reverse) classes.push("reverse");
 
-        return (<button className={classes.join(" ")} onClick={this.handleChange} >
+        return (<button ref={this.ref} className={classes.join(" ")} >
             <div className="pin" >
                 <div className={`thm-ele-button bar ${value ? "thm-bgSL" : "thm-bg1"}`}> </div>
                 <div className={`thm-ele-button btn ${value ? "thm-bgS" : "thm-bg0"}`

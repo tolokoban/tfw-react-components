@@ -3,6 +3,7 @@ import Icon from "../tfw/view/icon"
 import Flex from "../tfw/layout/flex"
 import List from "../tfw/view/list"
 import Button from "../tfw/view/button"
+import Checkbox from "../tfw/view/checkbox"
 import Fieldset from "../tfw/view/Fieldset"
 
 import Word from "./list/word"
@@ -13,12 +14,13 @@ console.log("wordsList =", wordsList);
 
 interface IListState {
     items: any[];
+    animateRefresh: boolean;
 }
 
 export default class PageButton extends React.Component<{}, IListState> {
     constructor(props: {}) {
         super(props);
-        this.state = { items: wordsList.map(wordMapper) };
+        this.state = { items: wordsList.map(wordMapper), animateRefresh: false };
     }
 
     sortByName() {
@@ -31,18 +33,24 @@ export default class PageButton extends React.Component<{}, IListState> {
         })
     }
 
+    sortByOccurences() {
+        return this.state.items.slice().sort((a, b) => {
+            const oa = a.occurences;
+            const ob = b.occurences;
+            if (oa < ob) return +1;
+            if (oa > ob) return -1;
+            return 0;
+        })
+    }
+
     render() {
         return (
             <div className="page">
-                <Fieldset label="Combo">
-                    <ul>
-                        <li><code>items</code> (any[])</li>
-                        <li><code>itemHeight</code> (unit)</li>
-                    </ul>
-                </Fieldset>
-                <hr />
                 <Flex alignItems="flex-start">
                     <List items={this.state.items}
+                        width="40vw"
+                        height="90vh"
+                        animateRefresh={this.state.animateRefresh}
                         itemHeight={48}
                         mapper={item => {
                             const { name, occurences, types } = item;
@@ -53,6 +61,21 @@ export default class PageButton extends React.Component<{}, IListState> {
                             onClick={() => this.setState({
                                 items: this.sortByName()
                             })} />
+                        <Button label="Sort by occurences"
+                            onClick={() => this.setState({
+                                items: this.sortByOccurences()
+                            })} />
+                        <Checkbox label="Animate refresh"
+                            value={this.state.animateRefresh}
+                            onChange={animateRefresh => this.setState({ animateRefresh })} />
+                        <hr />
+                        <Fieldset label="List">
+                            <ul>
+                                <li><code>items</code> (array): Data for the list.</li>
+                                <li><code>mapper</code> (function): Takes an item (element of items) and returns a React Element.</li>
+                                <li><code>animateRefresh</code> (boolean): Show an animation you can use when you want to refresh the list (<i>default = false</i>).</li>
+                            </ul>
+                        </Fieldset>
                     </div>
                 </Flex>
             </div>

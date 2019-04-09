@@ -1,9 +1,9 @@
 const SYMBOL = Symbol("gesture");
 
 type THandlers = {
-    tap?: (event: IEvent)=>void;
-    down?: (event: IEvent)=>void;
-    up?: (event: IEvent)=>void;
+    tap?: (event: IEvent) => void;
+    down?: (event: IEvent) => void;
+    up?: (event: IEvent) => void;
 };
 
 interface IEvent {
@@ -20,10 +20,12 @@ interface IInternalEvent {
     event: PointerEvent;
 }
 
+const STANDARD_EVENTS = ["keydown", "keyup"];
+
 class Gesture {
     _handlers: THandlers;
     _elem: HTMLElement;
-    _pointer = { isDown: false, x0:0, y0:0, x:0, y:0, time:0 };
+    _pointer = { isDown: false, x0: 0, y0: 0, x: 0, y: 0, time: 0, rect: {}, type: null };
 
     constructor(private elem: HTMLElement) {
         elem[SYMBOL] = this;
@@ -34,6 +36,10 @@ class Gesture {
 
     on(handlers: THandlers) {
         this._handlers = Object.assign(this._handlers, handlers);
+        Object.keys(this._handlers).forEach(eventName => {
+            if (STANDARD_EVENTS.indexOf(eventName) === -1) return;
+            this._elem.addEventListener(eventName, this._handlers[eventName], false);
+        });
     }
 
     _onDown(event: IInternalEvent) {
@@ -45,13 +51,14 @@ class Gesture {
         const y = event.y - ptr.rect.top;
         ptr.x0 = x;
         ptr.y0 = y;
+        ptr.x = x;
+        ptr.y = y;
         ptr.time = Date.now();
-        console.log(ptr);
 
         const handlerDown = this._handlers.down;
-        if( typeof handlerDown === 'function') {
-            event.preventDefault();
-            event.stopPropagation();
+        if (typeof handlerDown === 'function') {
+            event.event.preventDefault();
+            event.event.stopPropagation();
             handlerDown({
                 target: elem,
                 preventDefault: event.event.preventDefault.bind(event.event),
@@ -61,7 +68,7 @@ class Gesture {
         }
 
         const handlerTap = this._handlers.tap;
-        if( typeof handlerTap === 'function') {
+        if (typeof handlerTap === 'function') {
             event.event.preventDefault();
             event.event.stopPropagation();
         }
@@ -76,10 +83,9 @@ class Gesture {
         ptr.x = x;
         ptr.y = y;
         const time = Date.now() - ptr.time;
-        console.log(ptr);
 
         const handlerUp = this._handlers.up;
-        if( typeof handlerUp === 'function') {
+        if (typeof handlerUp === 'function') {
             handlerUp({
                 target: elem,
                 preventDefault: event.event.preventDefault.bind(event.event),
@@ -89,12 +95,12 @@ class Gesture {
         }
 
         const handlerTap = this._handlers.tap;
-        if( typeof handlerTap === 'function') {
+        if (typeof handlerTap === 'function') {
             // Ensure there is less than 300 milliseconds between down and up events.
-            if( time < 300 ) {
-                const dist = (x - ptr.x0)*(x - ptr.x0) + (y - ptr.y0)*(y - ptr.y0);
+            if (time < 300) {
+                const dist = (x - ptr.x0) * (x - ptr.x0) + (y - ptr.y0) * (y - ptr.y0);
                 // Ensure we don't have moves too much.
-                if( dist < 128) {
+                if (dist < 128) {
                     event.event.preventDefault();
                     event.event.stopPropagation();
                     handlerTap({
@@ -109,20 +115,25 @@ class Gesture {
 
     }
 
-    _onPan(event: IInternalEvent) {}
-    _onMove(event: IInternalEvent) {}
+    _onPan(event: IInternalEvent) { }
+    _onMove(event: IInternalEvent) { }
 
     _attachEvents() {
         const elem = this._elem;
-        elem.addEventListener("pointerdown", (evt) => {
-            console.log(evt);
+        elem.addEventListener("pointerdown", evt => {
+            if (this._pointer.type && this._pointer.type !== evt.pointerType) return;
+            this._pointer.type = evt.pointerType;
+
             this._onDown({
                 x: evt.clientX,
                 y: evt.clientY,
                 event: evt
             });
         }, false);
-        elem.addEventListener("pointerup", (evt) => {
+        elem.addEventListener("pointerup", evt => {
+            if (this._pointer.type && this._pointer.type !== evt.pointerType) return;
+            this._pointer.type = evt.pointerType;
+
             this._onUp({
                 x: evt.clientX,
                 y: evt.clientY,
@@ -133,12 +144,17 @@ class Gesture {
 }
 
 class GestureTouch extends Gesture {
-    constructor(elem: HTMLElement) { super(elem); }
+    constructor(elem: HTMLElement) {
+        super(elem);
+        console.info("GESTURE TOUCH!!!");
+    }
 }
 
-export default function(elem : HTMLElement): Gesture {
-    if( !elem[SYMBOL]) {
-        elem[SYMBOL] =window.PointerEvent ? new Gesture(elem) : new GestureTouch(elem);
+export default function(elem: HTMLElement): Gesture {
+    if (!elem[SYMBOL]) {
+        elem[SYMBOL] = window.PointerEvent
+            ? new Gesture(elem)
+            : new GestureTouch(elem);
     }
     return elem[SYMBOL];
 }

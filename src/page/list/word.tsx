@@ -21,7 +21,7 @@ export default class Word extends React.Component<IWordProps, {}> {
 
     render() {
         const { name, occurences, types } = this.props;
-        return (<div className="word" ref={this.ref}>
+        return (<button className="word" ref={this.ref}>
             <div className="types">{
                 TYPES.map(t => (<div key={t} className={types.indexOf(t) === -1 ? 'grey' : t}>{
                     t.charAt(0).toUpperCase()
@@ -29,6 +29,6 @@ export default class Word extends React.Component<IWordProps, {}> {
             }</div>
             <div className="name">{name}</div>
             <div className="occ">{occurences}</div>
-        </div>);
+        </button>);
     }
 }

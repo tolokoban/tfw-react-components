@@ -1,4 +1,4 @@
-div.word {
+button.word {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -10,7 +10,8 @@ div.word {
     border: 1px solid rgba(0, 0, 0, .3);
     border-radius: 4px;
     padding: 0 8px;
-    background: #fff;
+    background-color: var(--thm-bg3);
+    transition: all .3s;
     color: #000;
     cursor: pointer;
     /*
@@ -19,13 +20,18 @@ div.word {
     */
 }
 
+button.word:active {
+    background-color: var(--thm-bgSL);
+    transition: all .3s;
+}
+
 /*
-div.word.show {
+button.word.show {
     opacity: 1;
     transition: opacity .6s;
 }
 */
-div.word>div.types {
+button.word>div.types {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -34,12 +40,12 @@ div.word>div.types {
     max-width: 40px;
 }
 
-div.word>div.name {
+button.word>div.name {
     font-weight: bold;
     font-size: 120%;
 }
 
-div.word>div.types>div {
+button.word>div.types>div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,30 +59,30 @@ div.word>div.types>div {
     background: #aaa;
 }
 
-div.word>div.types>div.grey {
+button.word>div.types>div.grey {
     opacity: .4
 }
 
-div.word>div.types>div.noun {
+button.word>div.types>div.noun {
     background: #77f
 }
 
-div.word>div.types>div.adjective {
+button.word>div.types>div.adjective {
     background: #ff7
 }
 
-div.word>div.types>div.verb {
+button.word>div.types>div.verb {
     background: #f77
 }
 
-div.word>div.types>div.conjunction {
+button.word>div.types>div.conjunction {
     background: #f80
 }
 
-div.word>div.types>div.preposition {
+button.word>div.types>div.preposition {
     background: #f7f
 }
 
-div.word>div.types>div.adverb {
+button.word>div.types>div.adverb {
     background: #7f7
 }

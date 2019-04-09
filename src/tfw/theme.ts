@@ -1,7 +1,11 @@
 /**
  * Manage CSS styles.
  */
-export default { register: registerTheme, apply: applyTheme };
+export default {
+    register: registerTheme,
+    apply: applyTheme,
+    isDark
+};
 
 interface IStyle {
     bg0?: string;
@@ -37,6 +41,7 @@ import Color from "./color"
 
 interface IThemes {
     css: { [name: string]: HTMLStyleElement };
+    vars: { [name: string]: IStyle }
     current: string | null;
 }
 
@@ -47,11 +52,13 @@ const COLOR = new Color();
 const THEME_COLOR_NAMES = ["0", "1", "2", "3", "P", "PD", "PL", "S", "SD", "SL"];
 const THEMES: IThemes = {
     css: {},
+    vars: {},
     current: null
 };
 
 function registerTheme(themeName: string, _style: IStyle) {
     const style = completeWithDefaultValues(_style);
+    THEMES.vars[themeName] = style;
 
     let codeCSS = codeVariables(themeName, style);
     codeCSS += codeBackground(themeName, style);
@@ -123,6 +130,8 @@ function codeVariables(themeName: string, style: IStyle) {
         const pen = COLOR.luminanceStep() ? style.black : style.white;
         codeCSS += `  --thm-fg${colorName}: ${pen};\n`;
     });
+    codeCSS += `  --thm-white: ${style.white};\n`;
+    codeCSS += `  --thm-black: ${style.black};\n`;
     codeCSS += "}\n";
     return codeCSS;
 }
@@ -306,7 +315,7 @@ function rotateHue(color: string): string {
     COLOR.parse(color);
     COLOR.rgb2hsl();
     COLOR.H = COLOR.H + .5;
-    if( COLOR.H > 1 ) COLOR.H--;
+    if (COLOR.H > 1) COLOR.H--;
     COLOR.hsl2rgb();
     return COLOR.stringify();
 }
@@ -322,6 +331,36 @@ function addAlpha(color: string, alpha: string) {
 
 function removeTail(text: string, tail: string) {
     return text.substr(0, text.length - tail.length);
+}
+
+function isDark(colorName: string = ""): boolean {
+    if (colorName === "") return isThemeGloballyDark();
+
+    const vars = THEMES.vars[THEMES.current || "default"];
+    const varName = `$isDark/${colorName}`;
+    let isDark = vars[varName];
+    if (typeof isDark === 'boolean') return isDark;
+
+    const color = new Color(vars[colorName]);
+    vars[varName] = !color.luminanceStep();
+    return vars[varName];
+}
+
+function isThemeGloballyDark(): boolean {
+    const vars = THEMES.vars[THEMES.current || "default"];
+    let isDark = vars.$isDark;
+    if (typeof isDark === 'boolean') return isDark;
+
+    const bg0 = new Color(vars.bg0);
+    const bg1 = new Color(vars.bg1);
+    const bg2 = new Color(vars.bg2);
+    const bg3 = new Color(vars.bg3);
+    const average = Color.mix(
+        Color.mix(bg0, bg1),
+        Color.mix(bg2, bg3)
+    );
+    vars.$isDark = !average.luminanceStep();
+    return vars.$isDark;
 }
 
 registerTheme("default", { bgP: "#1e90ff" });

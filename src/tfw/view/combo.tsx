@@ -3,6 +3,7 @@ import "./combo.css"
 import castString from "../converter/string"
 import castBoolean from "../converter/boolean"
 import castStringArray from "../converter/string-array"
+import Touchable from "../behavior/touchable"
 import Icon from "./icon"
 import Gesture from "../gesture"
 import EscapeHandler from "../escape-handler"
@@ -17,6 +18,9 @@ interface IComboProps {
 }
 
 export default class Combo extends React.Component<IComboProps, {}> {
+    readonly touchable: Touchable;
+
+    ref = React.createRef<HTMLDivElement>()
     list = React.createRef<HTMLDivElement>()
     button = React.createRef<HTMLDivElement>()
 
@@ -29,6 +33,7 @@ export default class Combo extends React.Component<IComboProps, {}> {
     constructor(props: IComboProps) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.touchable = new Touchable({ onTap: this.handleClick });
     }
 
     handleClick(event: React.MouseEvent) {
@@ -169,6 +174,12 @@ export default class Combo extends React.Component<IComboProps, {}> {
         });
     }
 
+    componentDidMount() {
+        const element = this.ref.current;
+        if (!element) return;
+        this.touchable.element = element;
+    }
+
     render() {
         const p = this.props;
         const children = p.children;
@@ -189,8 +200,7 @@ export default class Combo extends React.Component<IComboProps, {}> {
         const index = getIndex(keys, value);
 
         return (
-            <button className={classes.join(" ")}
-                onClick={this.handleClick}>
+            <button ref={this.ref} className={classes.join(" ")}>
                 {label.length > 0 ? <header className="thm-bgPD">{label}</header> : null}
                 <div ref={this.button} className="button">
                     <div className="list-container"

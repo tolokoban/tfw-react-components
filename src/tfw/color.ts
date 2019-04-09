@@ -25,7 +25,7 @@ export default class Color {
         this.parse(codeCSS);
     }
 
-    static mix(color1: Color, color2: Color, alpha: number) {
+    static mix(color1: Color, color2: Color, alpha: number=.5) {
         const beta = 1 - alpha;
         return Color.newRGBA(
             alpha * color2.R + beta * color1.R,
