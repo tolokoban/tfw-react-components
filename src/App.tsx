@@ -1,6 +1,8 @@
 import React from "react"
 import Theme from "./tfw/theme"
+import Flex from "./tfw/layout/flex"
 import Stack from "./tfw/layout/stack"
+import Sidemenu from "./tfw/layout/sidemenu"
 import Combo from "./tfw/view/combo"
 import Button from "./tfw/view/button"
 import PageList from "./page/list"
@@ -17,13 +19,14 @@ import "./App.css";
 interface IAppState {
     page: string;
     theme: string;
+    showmenu: boolean;
 }
 
 export default class App extends React.Component<{}, IAppState> {
     constructor(props: {}) {
         super(props);
         this.handleThemeChange = this.handleThemeChange.bind(this);
-        this.state = Storage.local.get("state", { page: "button", theme: "default" });
+        this.state = Storage.local.get("state", { page: "button", theme: "default", showmenu: true });
     }
 
     componentDidUpdate() {
@@ -38,6 +41,7 @@ export default class App extends React.Component<{}, IAppState> {
     link(id: string) {
         return (
             <Button key={id} label={id}
+                classes={"thm-flex-grow-1"}
                 enabled={id !== this.state.page}
                 onClick={() => this.setState({ page: id })} />
         )
@@ -45,39 +49,81 @@ export default class App extends React.Component<{}, IAppState> {
 
     render() {
         return (
-            <div className="App thm-bg0">
-                <nav className="thm-ele-nav thm-bg2">
-                    <Combo label="Current theme"
-                        wide={true}
-                        value={this.state.theme}
-                        onChange={this.handleThemeChange}>
-                        <div key="default">Default</div>
-                        <div key="lemon">Lemon</div>
-                        <div key="salmon">Salmon</div>
-                        <div key="dark">Dark</div>
-                    </Combo>
-                    <hr />
-                    <div>{[
-                        this.link("button"),
-                        this.link("checkbox"),
-                        this.link("color-button-list"),
-                        this.link("color-button"),
-                        this.link("combo"),
-                        this.link("icon"),
-                        this.link("input"),
-                        this.link("list"),
-                        this.link("pane")
-                    ]}</div>
-                </nav>
-                <Stack value={this.state.page}>
-                    <PageCombo key="combo" />
-                    <PageButton key="button" />
-                    <PageCheckbox key="checkbox" />
-                    <PageIcon key="icon" />
-                    <PageList key="list" />
-                </Stack>
-            </div>
+            <Sidemenu
+                show={this.state.showmenu}
+                head="Tolokoban's components"
+                menu={(
+                    <div>
+                        <Combo label="Current theme"
+                            wide={true}
+                            value={this.state.theme}
+                            onChange={this.handleThemeChange}>
+                            <div key="default">Default</div>
+                            <div key="lemon">Lemon</div>
+                            <div key="salmon">Salmon</div>
+                            <div key="dark">Dark</div>
+                        </Combo>
+                        <hr />
+                        <Flex >{[
+                            this.link("button"),
+                            this.link("checkbox"),
+                            this.link("color-button-list"),
+                            this.link("color-button"),
+                            this.link("combo"),
+                            this.link("icon"),
+                            this.link("input"),
+                            this.link("list"),
+                            this.link("pane")
+                        ]}</Flex>
+                    </div>
+                )}
+                body={(
+                    <div className="App">
+                        <Stack value={this.state.page} scrollable={true}>
+                            <PageCombo key="combo" />
+                            <PageButton key="button" />
+                            <PageCheckbox key="checkbox" />
+                            <PageIcon key="icon" />
+                            <PageList key="list" />
+                        </Stack>
+                    </div>
+                )} />
         )
+        /*
+        <div className="App thm-bg0">
+            <nav className="thm-ele-nav thm-bg2">
+                <Combo label="Current theme"
+                    wide={true}
+                    value={this.state.theme}
+                    onChange={this.handleThemeChange}>
+                    <div key="default">Default</div>
+                    <div key="lemon">Lemon</div>
+                    <div key="salmon">Salmon</div>
+                    <div key="dark">Dark</div>
+                </Combo>
+                <hr />
+                <div>{[
+                    this.link("button"),
+                    this.link("checkbox"),
+                    this.link("color-button-list"),
+                    this.link("color-button"),
+                    this.link("combo"),
+                    this.link("icon"),
+                    this.link("input"),
+                    this.link("list"),
+                    this.link("pane")
+                ]}</div>
+            </nav>
+            <Stack value={this.state.page}>
+                <PageCombo key="combo" />
+                <PageButton key="button" />
+                <PageCheckbox key="checkbox" />
+                <PageIcon key="icon" />
+                <PageList key="list" />
+            </Stack>
+        </div>
+
+         */
     }
 }
 

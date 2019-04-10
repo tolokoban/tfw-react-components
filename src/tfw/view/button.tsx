@@ -2,6 +2,7 @@ import * as React from "react"
 import Icon from "./icon"
 import "./button.css"
 import Touchable from "../behavior/touchable"
+import castArray from "../converter/array"
 import castString from "../converter/string"
 import castBoolean from "../converter/boolean"
 
@@ -14,6 +15,7 @@ interface IButtonProps {
     small?: boolean;
     warning?: boolean;
     enabled?: boolean;
+    classes?: string[];
     tag?: any;
     onClick?: (tag: any) => void;
 }
@@ -51,7 +53,7 @@ export default class Button extends React.Component<IButtonProps, {}> {
             small = castBoolean(p.small, false),
             enabled = !wait && castBoolean(p.enabled, true),
             warning = castBoolean(p.warning, false),
-            classes = ["tfw-view-button"];
+            classes = ["tfw-view-button"].concat(castArray(p.classes));
         if (wide) classes.push("wide");
         if (flat) {
             classes.push("flat");

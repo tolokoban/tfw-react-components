@@ -159,7 +159,7 @@ export default class Combo extends React.Component<IComboProps, {}> {
         });
         Gesture(screen).on({ tap: () => EscapeHandler.fire() });
         Gesture(bigList).on({
-            tap: (evt) => {
+            tap: evt => {
                 if (!evt || typeof evt.y === 'undefined') return;
                 const scroll = bigList.scrollTop;
                 const index = Math.floor((evt.y + scroll) / 32);

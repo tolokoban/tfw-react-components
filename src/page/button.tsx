@@ -25,6 +25,7 @@ export default class PageButton extends React.Component<{}, {}> {
                         <li><code>small</code> (boolean)</li>
                         <li><code>warning</code> (boolean)</li>
                         <li><code>enabled</code> (boolean)</li>
+                        <li><code>classes</code> (string[]): CSS classes you want to add to this element. For exemple <code>"thm-flex-grow-1"</code></li>
                         <li><code>tag</code> (any): Any data which will be used as argument for the onClick handler.</li>
                     </ul>
                 </Fieldset>

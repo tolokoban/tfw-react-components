@@ -5,6 +5,7 @@ import Button from "./button"
 import castUnit from "../converter/unit"
 import castBoolean from "../converter/boolean"
 import castInteger from "../converter/integer"
+import Gesture from "../gesture"
 
 interface IListProps {
     items: any[];
@@ -13,6 +14,7 @@ interface IListProps {
     width?: string;
     height?: string;
     animateRefresh?: boolean;
+    onRefreshAsked?: () => void;
 }
 
 interface IListState {
@@ -28,6 +30,7 @@ export default class List extends React.Component<IListProps, IListState> {
     private lastVisibleItemsCount: number;
     private lastItemsArray: any[];
     private itemHeight: number = 36;
+    private _pandown = false;
 
     constructor(props: IListProps) {
         super(props);
@@ -36,18 +39,21 @@ export default class List extends React.Component<IListProps, IListState> {
         this.refBody = React.createRef();
         this.refTail = React.createRef();
         this.onScroll = Debouncer(this.onScroll.bind(this), 30);
-        this.onTouchMove = this.onTouchMove.bind(this);
+        this.onPanDown = this.onPanDown.bind(this);
         this.lastFirstItemIndex = -1;
         this.lastVisibleItemsCount = -1;
         this.lastItemsArray = [];
         this.state = { items: [] };
     }
 
-    onTouchMove(evt: React.TouchEvent) {
-        const touches = evt.changedTouches;
-        if (touches.length < 1) return;
-        const touch = touches[0];
-        console.log("TouchMove: ", touch);
+    onPanDown() {
+        const main = this.refMain.current;
+        if (!main) return;
+        if (main.scrollTop > 0) return;
+
+        const onRefresh = this.props.onRefreshAsked;
+        if (typeof onRefresh !== 'function') return;
+        onRefresh();
     }
 
     onScroll(evt: any = null): void {
@@ -96,19 +102,24 @@ export default class List extends React.Component<IListProps, IListState> {
         window.addEventListener("resize", this.onScroll, false);
         const main = this.refMain.current;
         if (!main) return;
-        main.addEventListener("touchmove", this.onTouchMove, true);
-        main.addEventListener("touchstart", this.onTouchMove, true);
+        Gesture(main).on({
+            down: () => this._pandown = false,
+            pandown: () => {
+                main.classList.add("animate-refresh");
+                this._pandown = true
+            },
+            up: () => {
+                main.classList.remove("animate-refresh");
+                if (this._pandown === true) this.onPanDown();
+            }
+        });
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.onScroll, false);
-        const main = this.refMain.current;
-        if (!main) return;
-        main.removeEventListener("touchmove", this.onTouchMove, true);
     }
 
     render() {
-        if (this.props.items.length < 1) return null;
         this.itemHeight = castInteger(this.props.itemHeight, 36);
         if (this.lastItemsArray !== this.props.items) {
             this.lastVisibleItemsCount = -1;
@@ -125,7 +136,7 @@ export default class List extends React.Component<IListProps, IListState> {
             children = this.state.items
                 .map(this.props.mapper)
                 .map(content => (
-                    <div class="item"
+                    <div className="item" key={content.key}
                         style={{
                             height: `${this.itemHeight}px`,
                             minHeight: `${this.itemHeight}px`,
@@ -141,7 +152,7 @@ export default class List extends React.Component<IListProps, IListState> {
         const height = castUnit(this.props.height, "auto");
         const animateRefresh = castBoolean(this.props.animateRefresh, false);
         const classes = ["tfw-view-list", "thm-bg2"];
-        if (animateRefresh) classes.push("animate-refresh");
+        if (animateRefresh) classes.push("animate-refresh", "refreshing");
 
         return (
             <div className={classes.join(" ")}

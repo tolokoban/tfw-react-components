@@ -1,4 +1,8 @@
-div.thm-layout-stack {
+div.tfw-layout-stack {
     position: relative;
     padding: 0;
+}
+
+div.tfw-layout-stack.scrollable>div {
+    overflow: auto;
 }

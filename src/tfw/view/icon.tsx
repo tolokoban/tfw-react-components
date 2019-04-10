@@ -119,17 +119,20 @@ export default class Icon extends React.Component<IIconProps, {}> {
     }
 }
 
-function createSvgContent(def: TIconDefinition, props: IIconProps): any {
+function createSvgContent(def: TIconDefinition, props: IIconProps, key: string = ""): any {
     const
         elementName = def[0],
         { attributes, children } = parseDef(def);
 
     if (typeof elementName === 'undefined') return <g></g>;
 
+    const attribs: React.Attributes = manageColors(attributes);
+    if (key.length > 0) attributes.key = key;
+
     return React.createElement(
         elementName,
-        manageColors(attributes, props),
-        children.map(child => createSvgContent(child, props))
+        attribs,
+        children.map((child, index) => createSvgContent(child, props, `${index}`))
     ) as React.ReactSVGElement;
 }
 
@@ -147,7 +150,7 @@ const CLASSES = ["0", "1", "P", "PL", "PD", "S", "SL", "SD"];
  * @param   props   [description]
  * @returns         [description]
  */
-function manageColors(attribs: { [key: string]: any }, props: IIconProps) {
+function manageColors(attribs: { [key: string]: any }) {
     // @TODO For special forms of "fill" and "stroke", add classes.
     const classes = (attribs.className || "").split(" ");
 
