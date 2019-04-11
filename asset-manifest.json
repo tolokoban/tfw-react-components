@@ -1,15 +1,15 @@
 {
-  "main.css": "/tfw-react-components/static/css/main.05012008.chunk.css",
-  "main.js": "/tfw-react-components/static/js/main.2cf7a02e.chunk.js",
-  "main.js.map": "/tfw-react-components/static/js/main.2cf7a02e.chunk.js.map",
+  "main.css": "/tfw-react-components/static/css/main.77cc906e.chunk.css",
+  "main.js": "/tfw-react-components/static/js/main.ed42fe54.chunk.js",
+  "main.js.map": "/tfw-react-components/static/js/main.ed42fe54.chunk.js.map",
   "runtime~main.js": "/tfw-react-components/static/js/runtime~main.bf73a621.js",
   "runtime~main.js.map": "/tfw-react-components/static/js/runtime~main.bf73a621.js.map",
   "static/js/2.23a66857.chunk.js": "/tfw-react-components/static/js/2.23a66857.chunk.js",
   "static/js/2.23a66857.chunk.js.map": "/tfw-react-components/static/js/2.23a66857.chunk.js.map",
   "index.html": "/tfw-react-components/index.html",
-  "precache-manifest.0e7f32eb46282246726df1b8d929eb1c.js": "/tfw-react-components/precache-manifest.0e7f32eb46282246726df1b8d929eb1c.js",
+  "precache-manifest.83fa23555ac0d9c5a9aa5a0d757b73b3.js": "/tfw-react-components/precache-manifest.83fa23555ac0d9c5a9aa5a0d757b73b3.js",
   "service-worker.js": "/tfw-react-components/service-worker.js",
-  "static/css/main.05012008.chunk.css.map": "/tfw-react-components/static/css/main.05012008.chunk.css.map",
+  "static/css/main.77cc906e.chunk.css.map": "/tfw-react-components/static/css/main.77cc906e.chunk.css.map",
   "static/media/josefin.css": "/tfw-react-components/static/media/josefin.7270440b.woff2",
   "static/media/words-list.txt": "/tfw-react-components/static/media/words-list.64432021.txt"
 }
