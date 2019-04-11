@@ -15,7 +15,7 @@ interface IButtonProps {
     small?: boolean;
     warning?: boolean;
     enabled?: boolean;
-    classes?: string[];
+    classes?: string[] | string;
     tag?: any;
     onClick?: (tag: any) => void;
 }

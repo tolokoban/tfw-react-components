@@ -51,6 +51,7 @@ export default class App extends React.Component<{}, IAppState> {
         return (
             <Sidemenu
                 show={this.state.showmenu}
+                onShowChanged={() => this.setState({ showmenu: !this.state.showmenu })}
                 head="Tolokoban's components"
                 menu={(
                     <div>

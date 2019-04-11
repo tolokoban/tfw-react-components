@@ -1,6 +1,8 @@
 import * as React from "react"
 import "./word.css"
 
+import Touchable from "../../tfw/view/touchable"
+
 interface IWordProps {
     name: string;
     occurences: number;
@@ -12,16 +14,9 @@ const TYPES = [
     "noun", "adjective", "verb", "conjunction", "preposition", "adverb"  //, "interjection"
 ]
 export default class Word extends React.Component<IWordProps, {}> {
-    private readonly ref: React.RefObject<HTMLDivElement>;
-
-    constructor(props: IWordProps) {
-        super(props);
-        this.ref = React.createRef();
-    }
-
     render() {
         const { name, occurences, types } = this.props;
-        return (<button className="word" ref={this.ref}>
+        return (<Touchable classes="word">
             <div className="types">{
                 TYPES.map(t => (<div key={t} className={types.indexOf(t) === -1 ? 'grey' : t}>{
                     t.charAt(0).toUpperCase()
@@ -29,6 +24,6 @@ export default class Word extends React.Component<IWordProps, {}> {
             }</div>
             <div className="name">{name}</div>
             <div className="occ">{occurences}</div>
-        </button>);
+        </Touchable>);
     }
 }

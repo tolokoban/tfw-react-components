@@ -1,4 +1,5 @@
 import React from "react"
+import castArray from "../converter/array"
 import castString from "../converter/string"
 import castBoolean from "../converter/boolean"
 import Button from "../view/button"
@@ -9,6 +10,7 @@ interface ISidemenuProps {
     head?: string;
     menu?: React.ReactElement<HTMLDivElement>;
     body?: React.ReactElement<HTMLDivElement>;
+    classes?: string[] | string;
     onShowChanged?: (isMenuVisible: boolean) => void;
 }
 
@@ -27,9 +29,11 @@ export default class Sidemenu extends React.Component<ISidemenuProps, {}> {
     render() {
         const show = castBoolean(this.props.show, window.innerWidth > 480);
         const head = castString(this.props.head, "");
+        const classes = ["tfw-layout-sidemenu thm-bg0"].concat(castArray(this.props.classes));
+        if (show) classes.push("show");
 
         return (
-            <div className="tfw-layout-sidemenu">
+            <div className={classes.join(" ")}>
                 <div className="body thm-bg0">{this.props.body}</div>
                 <div className="menu thm-ele-nav thm-bg1">
                     <header className="thm-ele-nav thm-bgPD">{head}</header>

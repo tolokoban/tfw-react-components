@@ -10,8 +10,9 @@ div.tfw-view-list {
   /* To prevent a bug in Google Chrome */
   overflow-anchor: none;
 }
-div.tfw-view-list.refreshing {
-  filter: blur(50%);
+div.tfw-view-list.refreshing > div.body {
+  filter : blur(10px);
+  transition    : filter 1s;
   pointer-events: none;
 }
 div.tfw-view-list > div {
@@ -21,6 +22,7 @@ div.tfw-view-list > div {
   min-width: 100%;
 }
 div.tfw-view-list > div.body {
+  filter : blur(0);
   overflow: hidden;
 }
 div.tfw-view-list > div.body > div.item {
