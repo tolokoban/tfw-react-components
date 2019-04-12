@@ -30,7 +30,6 @@ export default class List extends React.Component<IListProps, IListState> {
     private lastVisibleItemsCount: number;
     private lastItemsArray: any[];
     private itemHeight: number = 36;
-    private _pandown = false;
 
     constructor(props: IListProps) {
         super(props);
@@ -103,15 +102,17 @@ export default class List extends React.Component<IListProps, IListState> {
         const main = this.refMain.current;
         if (!main) return;
         Gesture(main).on({
-            down: () => this._pandown = false,
-            pandown: () => {
+            pandown: evt => {
+                if (main.scrollTop > 0) return;
+                evt.clear();
                 main.classList.add("animate-refresh");
-                this._pandown = true
             },
-            up: () => {
-                main.classList.remove("animate-refresh");
-                if (this._pandown === true) this.onPanDown();
-            }
+            swipedown: evt => {
+                if (main.scrollTop > 0) return;
+                evt.clear();
+                this.onPanDown();
+            },
+            up: () => main.classList.remove("animate-refresh")
         });
     }
 

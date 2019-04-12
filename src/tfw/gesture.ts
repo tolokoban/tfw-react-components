@@ -1,7 +1,8 @@
 /**
  * Here is the list of all parameters used if all the handlers.
  *
- * tap({ x: number, y: number })
+ * tap({ x: number, y: number, index: number })
+ * 
  */
 
 import Moves from "./gesture/moves"
@@ -12,7 +13,9 @@ const SYMBOL = Symbol("gesture");
 
 let ID = 0;
 
-type TGestureName = "tap" | "down" | "up" | "pandown" | "swipedown";
+type TGestureName = "tap" | "down" | "up"
+    | "pan" | "pandown" | "panup" | "panvertical"
+    | "swipe" | "swipedown" | "swipeup" | "swipevertical";
 type TEventName = "keydown" | "keyup";
 type THandlers = {
     [key: TGestureName | TEventName]: (event: IEvent) => void;
@@ -136,6 +139,7 @@ class Gesture {
             this.handlers.up(Object.assign(event, { x, y }));
         }
         this.recognizeTap(event, ptr);
+        this.recognizeSwipe(event, ptr);
     }
 
     private handleMove(event: IBasicEvent) {
@@ -167,23 +171,108 @@ class Gesture {
     private recognizePan(evt: IBasicEvent, ptr: IPointer) {
         if (!ptr.isDown) return;
         this.recognizePanDown(evt, ptr);
+        this.recognizePanUp(evt, ptr);
+        if (this.hasHandlerFor("pan")) {
+            const { x, y, startX, startY } = ptr.moves;
+            this.handlers.pan(Object.assign(evt, { x, y, startX, startY }));
+        }
     }
 
     private recognizePanDown(evt: IBasicEvent, ptr: IPointer) {
-        if (!this.hasHandlerFor("pandown")) return;
+        if (!this.hasHandlerFor("pandown", "panvertical")) return;
 
         // Check that we are panning down.
         const moves = ptr.moves;
         const sx = Math.abs(moves.speedX);
         const sy = moves.speedY;
         if (sy < sx) return;
-        // Chack that the final point is beneath the initial one.
+        // Check that the final point is beneath the initial one.
         const dx = Math.abs(moves.x - moves.startX);
         const dy = moves.y - moves.startY;
         if (dy < dx) return;
 
-        evt.clear();
-        this.handlers.pandown(Object.assign(evt, { x: moves.x, y: moves.y }));
+        if (this.hasHandlerFor("pandown")) {
+            this.handlers.pandown(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+        if (this.hasHandlerFor("panvertical")) {
+            this.handlers.panvertical(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+    }
+
+    private recognizePanUp(evt: IBasicEvent, ptr: IPointer) {
+        if (!this.hasHandlerFor("panup", "panvertical")) return;
+
+        // Check that we are panning up.
+        const moves = ptr.moves;
+        const sx = Math.abs(moves.speedX);
+        const sy = -moves.speedY;
+        if (sy < sx) return;
+        // Check that the final point is beneath the initial one.
+        const dx = Math.abs(moves.x - moves.startX);
+        const dy = moves.startY - moves.y;
+        if (dy < dx) return;
+
+        if (this.hasHandlerFor("panup")) {
+            this.handlers.panup(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+        if (this.hasHandlerFor("panvertical")) {
+            this.handlers.panvertical(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+    }
+
+    private recognizeSwipe(evt: IBasicEvent, ptr: IPointer) {
+        this.recognizeSwipeDown(evt, ptr);
+        this.recognizeSwipeUp(evt, ptr);
+        if (this.hasHandlerFor("swipe")) {
+            const { x, y, startX, startY } = ptr.moves;
+            this.handlers.swipe(Object.assign(evt, { x, y, startX, startY }));
+        }
+    }
+
+    private recognizeSwipeDown(evt: IBasicEvent, ptr: IPointer) {
+        if (!this.hasHandlerFor("swipedown", "swipevertical")) return;
+
+        // Check that we are panning down.
+        const moves = ptr.moves;
+        const sx = Math.abs(moves.speedX);
+        const sy = moves.speedY;
+        if (sy < sx) return;
+        // Check that the final point is beneath the initial one.
+        const dx = Math.abs(moves.x - moves.startX);
+        const dy = moves.y - moves.startY;
+        if (dy < dx) return;
+        // Minimal speed for swipe: 100 pixels/second.
+        const speed = dy / moves.elapsedTime;
+        if (speed < 0.1) return;
+        if (this.hasHandlerFor("swipedown")) {
+            this.handlers.swipedown(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+        if (this.hasHandlerFor("swipevertical")) {
+            this.handlers.swipevertical(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+    }
+
+    private recognizeSwipeUp(evt: IBasicEvent, ptr: IPointer) {
+        if (!this.hasHandlerFor("swipeup", "swipevertical")) return;
+
+        // Check that we are panning up.
+        const moves = ptr.moves;
+        const sx = Math.abs(moves.speedX);
+        const sy = moves.speedY;
+        if (sy < sx) return;
+        // Check that the final point is beneath the initial one.
+        const dx = Math.abs(moves.x - moves.startX);
+        const dy = moves.y - moves.startY;
+        if (dy < dx) return;
+        // Minimal speed for swipe: 100 pixels/second.
+        const speed = dy / moves.elapsedTime;
+        if (speed < 0.1) return;
+        if (this.hasHandlerFor("swipeup")) {
+            this.handlers.swipeup(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+        if (this.hasHandlerFor("swipevertical")) {
+            this.handlers.swipevertical(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
     }
 
     /*
