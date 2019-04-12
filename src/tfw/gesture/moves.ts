@@ -10,9 +10,9 @@ export default class Moves {
     private _x0: number;
     private _y0: number;
     private _time0: number;
-    private _x: number[] = [];
-    private _y: number[] = [];
-    private _time: number[] = [];
+    private _x: number[] = new Array(CAPACITY);
+    private _y: number[] = new Array(CAPACITY);
+    private _time: number[] = new Array(CAPACITY);
     private _cursor: number = 0;
 
     constructor(x: number = 0, y: number = 0) {

@@ -32,12 +32,12 @@ export default class Touchable {
         this.onTap = castFunction(args.onTap);
     }
 
-    fire() {
+    fire(evt) {
         if (!this.enabled) return;
 
         const handler = this.onTap;
         if (typeof handler === 'function') {
-            handler();
+            handler(evt);
         }
     }
 
@@ -83,8 +83,8 @@ export default class Touchable {
                 window.setTimeout(() => ripple.className = "open");
                 window.setTimeout(() => document.body.removeChild(screen), 500);
             },
-            tap() {
-                that.fire();
+            tap(evt) {
+                that.fire(evt);
             }
         })
     }

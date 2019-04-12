@@ -31,6 +31,12 @@ interface IHammerEvent {
     pointerType: string;
 }
 
+interface IMinimalEvent {
+    preventDefault: () => void;
+    stopPropagation: () => void;
+    pointerType: string;
+}
+
 interface IEvent {
     preventDefault: () => void;
     stopPropagation: () => void;
@@ -54,7 +60,8 @@ interface IPointer {
         width: number;
         height: number;
     };
-    type: "mouse" | "pen" | "touch" | null;
+    type: string | null;
+    time: number;
     id: number;
 }
 
@@ -69,12 +76,14 @@ class GestureWithHammer {
         moves: new Moves(0, 0),
         rect: { left: 0, top: 0, width: 0, height: 0 },
         type: null,
+        time: 0,
         id: ID++
     };
 
     constructor(elem: HTMLElement) {
         this._elem = elem;
         this._hammer = new Hammer(elem);
+        this._handleDown = this._handleDown.bind(this);
         this._handleTap = this._handleTap.bind(this);
         this._attachLowLevelEvents();
     }
@@ -94,7 +103,7 @@ class GestureWithHammer {
 
     on(handlers: THandlers) {
         const elem = this._elem;
-        const hammerHandlers: IHammerHandlers = {};
+        const hammer = this._hammer;
         this._handlers = Object.assign(this._handlers, handlers);
         Object.keys(handlers).forEach(eventName => {
             if (eventName !== eventName.trim().toLowerCase()) {
@@ -106,41 +115,121 @@ class GestureWithHammer {
                 }
                 elem.addEventListener(eventName, handlers[eventName], false);
             } else {
-                const handler = handlers[eventName];
-                switch (eventName) {
-                    case "down":
-                        hammerHandlers.press = wrap(handler, "down");
-                        break;
-                    case "up":
-                        hammerHandlers.pressup = wrap(handler, "up");
-                        break;
-                    case "tap":
-                        hammerHandlers.tap = wrap(handler, "tap");
-                        break;
-                    case "pandown":
-                        break;
-                    default:
-                        throw Error(`Unknown gesture name: ${eventName}!`);
-                }
+                this._onGesture(eventName, handlers[eventName]);
             }
         });
-
-        Object.keys(hammerHandlers).forEach(gestureName => {
-            const handler = hammerHandlers[gestureName];
-            this._hammer.on(gestureName, handler);
-        })
     }
 
     //#####################################################################
 
-    _attachLowLevelEvents() {
+    _onGesture(name: string, handler: () => void) {
+        const hammer = this._hammer;
+        switch (name) {
+            case "down":
+                break;
+            case "up":
+                break;
+            case "press":
+                hammer.on("press", handler);
+                break;
+            case "tap":
+                hammer.on("tap", this._handleTap);
+                break;
+            case "pandown":
+                break;
+            default:
+                throw Error(`Unknown gesture name: ${name}!`);
+        }
+    }
+    /**
+     * When several pointers are present, their events are triggered one
+     * at the time. We must take care of the first one, but ignore the others.
+     *
+     * @param   {IMinimalEvent} evt - The event to look at.
+     * @returns {boolean} `true` means we must take care of this event.
+     * `false` means we must ignore it.
+     */
+    _checkPointerType(evt: IMinimalEvent) {
+        const ptr = this._pointer;
+        const now = Date.now();
+        if (!ptr.type || now - ptr.time > 400) {
+            // Just take the first pointer type we get and set it
+            // has the next default one.
+            ptr.type = evt.pointerType;
+            ptr.time = now;
+            return true;
+        }
+        if (ptr.type !== evt.pointerType) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            return false;
+        }
+        ptr.time = now;
+        return true;
+    }
 
+    /**
+     * We need to listen at low level events, such has pointer/touch start and end.
+     */
+    _attachLowLevelEvents() {
+        if (window.PointerEvent) this._attachLowLevelPointerEvents();
+        else this._attachLowLevelTouchEvents();
+    }
+
+    _attachLowLevelPointerEvents() {
+        const elem = this._elem;
+        elem.addEventListener("pointerdown", evt => {
+            if (!this._checkPointerType(evt)) return;
+            this._handleDown(
+                evt.clientX,
+                evt.clientY
+            );
+        }, false);
+
+    }
+
+    _attachLowLevelTouchEvents() {
+        const elem = this._elem;
+        elem.addEventListener("touchstart", evt => {
+            console.info("[TOUCH] evt=", evt);
+            if (!this._checkPointerType(evt)) return;
+            /*
+            this._handleDown(
+                evt.clientX,
+                evt.clientY
+            );*/
+        }, false);
     }
 
     _handleTap(event: IHammerEvent) {
+        if (!this.hasHandlerFor("tap")) return;
+        const handler = this._handlers.tap;
+        const { x, y } = this._pointer.moves;
+        console.info(`TAP[${this._pointer.id}]`, x, y, event.center, " ; ",
+            event.center.x - x,
+            event.center.y - y);
+        handler({
+            x: event.center.x - x,
+            y: event.center.y - y,
+            id: this._pointer.id
+        });
+    }
 
+    _handleDown(clientX: number, clientY: number) {
+        const ptr = this._pointer;
+        const elem = this._elem;
+        ptr.rect = elem.getBoundingClientRect();
+        console.info("ptr.rect, clientX, clientY=", ptr.rect, clientX, clientY);
+        ptr.moves.init(clientX - ptr.rect.left, clientY - ptr.rect.top);
+        console.info("ptr.moves.x, ptr.moves.y=", ptr.moves.x, ptr.moves.y);
+        if (this.hasHandlerFor("down")) {
+            this._handlers.down({ x: ptr.moves.x, y: ptr.moves.y });
+        }
     }
 }
+
+
+
 
 function wrap(handler, name) {
     return function(...args) {
@@ -354,12 +443,10 @@ class GestureTouch extends Gesture {
 
 export default function(elem: HTMLElement): Gesture {
     if (!elem[SYMBOL]) {
-        elem[SYMBOL] = new GestureWithHammer(elem);
-        /*
+        //elem[SYMBOL] = new GestureWithHammer(elem);
         elem[SYMBOL] = window.PointerEvent
             ? new Gesture(elem)
             : new GestureTouch(elem);
-            */
     }
     return elem[SYMBOL];
 }

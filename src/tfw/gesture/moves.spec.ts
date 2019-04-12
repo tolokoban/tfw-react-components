@@ -2,14 +2,12 @@ import Moves from "./moves"
 
 // Mock for Date.now().
 const DateBackup = Date;
-console.log("BEFORE");
 window.Date = {
     time: 0,
     now() { return this.time; }
 };
 afterAll(() => {
     window.Date = DateBackup;
-    console.log("AFTER");
 });
 
 
