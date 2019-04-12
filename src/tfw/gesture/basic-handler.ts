@@ -1,4 +1,26 @@
+/**
+ * BasicHandler(
+ *     element: HTMLElement,
+ *     handleDown: TBasicHandler,
+ *     handleUp: TBasicHandler,
+ *     handleMove: TBasicHandler
+ * )
+ *
+ * Deals with three basic events : DOWN, UP and MOVE.
+ * If the device has several input pointers, we will return
+ * only one event.
+ *
+ * A TBasicHandler is a synthetic event object:
+ *   - x: X coordinate relative to the viewport, not including any scroll offset.
+ *   - y: Y coordinate relative to the viewport, not including any scroll offset.
+ *   - index: For multi-touch system. The first one is 0, the second is 1, etc.
+ *   - buttons: 1 = left, 2 = right.
+ *   - pointer: "mouse" | "touch" | "pen".
+ *   - clear(): Call stopPropagation() and preventDefault() on this event.
+ *
+ */
 import Finger from "./finger"
+import {IBasicEvent} from "./basic-handler.types"
 
 interface ITouch {
     identifier: number;
@@ -19,14 +41,6 @@ interface IMouseEvent {
 type TMouseEventHandler = (evt:IMouseEvent) => void;
 
 type TDeviceEventHandler = TTouchEventHandler|TMouseEventHandler;
-
-interface IBasicEvent {
-    x: number;
-    y: number;
-    index: number;
-    buttons: number;
-    pointer: "mouse" | "touch" | "pen";
-}
 
 type TBasicHandler = (evt: IBasicEvent) => void | undefined;
 
@@ -105,7 +119,8 @@ function attachDownEventTouch(this: BasicHandler, handleDown: TBasicHandler) {
                 y: touch.clientY,
                 index: this.fingers.getIndex(touch.identifier),
                 buttons: 1,
-                pointer: "touch"
+                pointer: "touch",
+                clear: createClear(evt)
             });
         }
     };
@@ -123,7 +138,8 @@ function attachDownEventMouse(this: BasicHandler, handleDown: TBasicHandler) {
             y: evt.clientY,
             index: 0,
             buttons: evt.buttons,
-            pointer: "mouse"
+            pointer: "mouse",
+            clear: createClear(evt)
         });
     };
     deviceHandlers.mousedown = handler;
@@ -147,7 +163,8 @@ function attachUpEventTouch(this: BasicHandler, handleUp: TBasicHandler) {
                 y: touch.clientY,
                 index: this.fingers.getIndex(touch.identifier),
                 buttons: 1,
-                pointer: "touch"
+                pointer: "touch",
+                clear: createClear(evt)
             });
             this.fingers.remove(touch.identifier)
         }
@@ -166,7 +183,8 @@ function attachUpEventMouse(this: BasicHandler, handleUp: TBasicHandler) {
             y: evt.clientY,
             index: 0,
             buttons: evt.buttons,
-            pointer: "mouse"
+            pointer: "mouse",
+            clear: createClear(evt)
         });
     };
     deviceHandlers.mouseup = handler;
@@ -192,7 +210,8 @@ function attachMoveEventTouch(this: BasicHandler, handleMove: TBasicHandler) {
                 y: touch.clientY,
                 index: this.fingers.getIndex(touch.identifier),
                 buttons: 1,
-                pointer: "touch"
+                pointer: "touch",
+                clear: createClear(evt)
             });
             this.fingers.remove(touch.identifier)
         }
@@ -211,9 +230,18 @@ function attachMoveEventMouse(this: BasicHandler, handleMove: TBasicHandler) {
             y: evt.clientY,
             index: 0,
             buttons: evt.buttons,
-            pointer: "mouse"
+            pointer: "mouse",
+            clear: createClear(evt)
         });
     };
     deviceHandlers.mousemove = handler;
     element.addEventListener("mousemove", handler, false);
+}
+
+
+function createClear(evt) {
+    return () => {
+        evt.preventDefault();
+        evt.stopPropagation();
+    }
 }

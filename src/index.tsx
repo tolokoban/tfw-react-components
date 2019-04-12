@@ -4,6 +4,7 @@ import App from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
+/*
 import BasicHandler from "./tfw/gesture/basic-handler"
 
 const basicHandler = new BasicHandler(
@@ -17,3 +18,4 @@ const basicHandler = new BasicHandler(
     evt => {
         console.info("[MOVE]", evt);
     });
+*/

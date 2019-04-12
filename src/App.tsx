@@ -60,8 +60,8 @@ export default class App extends React.Component<{}, IAppState> {
                             value={this.state.theme}
                             onChange={this.handleThemeChange}>
                             <div key="default">Default</div>
-                            <div key="lemon">Lemon</div>
-                            <div key="salmon">Salmon</div>
+                            <div key="ebony">Ebony</div>
+                            <div key="fruity">Fruity</div>
                             <div key="dark">Dark</div>
                         </Combo>
                         <hr />
@@ -90,47 +90,16 @@ export default class App extends React.Component<{}, IAppState> {
                     </div>
                 )} />
         )
-        /*
-        <div className="App thm-bg0">
-            <nav className="thm-ele-nav thm-bg2">
-                <Combo label="Current theme"
-                    wide={true}
-                    value={this.state.theme}
-                    onChange={this.handleThemeChange}>
-                    <div key="default">Default</div>
-                    <div key="lemon">Lemon</div>
-                    <div key="salmon">Salmon</div>
-                    <div key="dark">Dark</div>
-                </Combo>
-                <hr />
-                <div>{[
-                    this.link("button"),
-                    this.link("checkbox"),
-                    this.link("color-button-list"),
-                    this.link("color-button"),
-                    this.link("combo"),
-                    this.link("icon"),
-                    this.link("input"),
-                    this.link("list"),
-                    this.link("pane")
-                ]}</div>
-            </nav>
-            <Stack value={this.state.page}>
-                <PageCombo key="combo" />
-                <PageButton key="button" />
-                <PageCheckbox key="checkbox" />
-                <PageIcon key="icon" />
-                <PageList key="list" />
-            </Stack>
-        </div>
-
-         */
     }
 }
 
 
 Theme.register("default", { bgP: "#1e90ff", bgS: "#ff8d1e", bg3: "#fff" });
-Theme.register("lemon", { bgP: "#790", bgS: "#dd1", bg3: "#eeffee", white: "#efe" });
-Theme.register("salmon", { bgP: "#900", bgS: "#faa", bg3: "#daa", white: "#fed" });
+Theme.register("ebony", {
+    white: "#fda", black: "#420",
+    bg0: "#febb77", bg1: "#fecf9f", bg2: "#fee3c7", bg3: "#fef8ef",
+    bgP: "#630", bgS: "#b35900"
+});
+Theme.register("fruity", { bgP: "#900", bgS: "#faa", bg3: "#daa", white: "#fed" });
 Theme.register("dark", { bgP: "#059335", bg0: "#000", white: "#ccc" });
 Theme.apply("default");
