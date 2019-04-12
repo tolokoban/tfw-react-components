@@ -11,8 +11,8 @@ div.tfw-view-list {
   overflow-anchor: none;
 }
 div.tfw-view-list.refreshing > div.body {
-  filter : blur(10px);
-  transition    : filter 1s;
+  filter : blur(8px);
+  transition    : none;
   pointer-events: none;
 }
 div.tfw-view-list > div {

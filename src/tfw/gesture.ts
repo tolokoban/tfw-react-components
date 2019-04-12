@@ -143,6 +143,9 @@ class Gesture {
         if (event.index > 2) return;
 
         const ptr = this.getPointer(event.index);
+        const x = event.x - ptr.rect.left;
+        const y = event.y - ptr.rect.top;
+        ptr.moves.add(x, y);
         this.recognizePan(event, ptr);
     }
 
