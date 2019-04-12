@@ -27,6 +27,7 @@ export default class App extends React.Component<{}, IAppState> {
         super(props);
         this.handleThemeChange = this.handleThemeChange.bind(this);
         this.state = Storage.local.get("state", { page: "button", theme: "default", showmenu: true });
+        Theme.apply(this.state.theme);
     }
 
     componentDidUpdate() {
@@ -97,9 +98,8 @@ export default class App extends React.Component<{}, IAppState> {
 Theme.register("default", { bgP: "#1e90ff", bgS: "#ff8d1e", bg3: "#fff" });
 Theme.register("ebony", {
     white: "#fda", black: "#420",
-    bg0: "#febb77", bg1: "#fecf9f", bg2: "#fee3c7", bg3: "#fef8ef",
-    bgP: "#630", bgS: "#b35900"
+    bg0: "#febb77", bg3: "#fee3c7",
+    bgP: "#630", bgS: "#d36900"
 });
 Theme.register("fruity", { bgP: "#900", bgS: "#faa", bg3: "#daa", white: "#fed" });
 Theme.register("dark", { bgP: "#059335", bg0: "#000", white: "#ccc" });
-Theme.apply("default");
