@@ -2,7 +2,7 @@
  * Here is the list of all parameters used if all the handlers.
  *
  * tap({ x: number, y: number, index: number })
- * 
+ *
  */
 
 import Moves from "./gesture/moves"
@@ -15,7 +15,8 @@ let ID = 0;
 
 type TGestureName = "tap" | "down" | "up"
     | "pan" | "pandown" | "panup" | "panvertical"
-    | "swipe" | "swipedown" | "swipeup" | "swipevertical";
+    | "swipe" | "swipedown" | "swipeup" | "swipevertical"
+    | "swipeleft";
 type TEventName = "keydown" | "keyup";
 type THandlers = {
     [key: TGestureName | TEventName]: (event: IEvent) => void;
@@ -223,6 +224,7 @@ class Gesture {
     private recognizeSwipe(evt: IBasicEvent, ptr: IPointer) {
         this.recognizeSwipeDown(evt, ptr);
         this.recognizeSwipeUp(evt, ptr);
+        this.recognizeSwipeLeft(evt, ptr);
         if (this.hasHandlerFor("swipe")) {
             const { x, y, startX, startY } = ptr.moves;
             this.handlers.swipe(Object.assign(evt, { x, y, startX, startY }));
@@ -275,28 +277,28 @@ class Gesture {
         }
     }
 
-    /*
-    _handlePanDown(event: IInternalEvent) {
-        if (!this.hasHandlerFor("pandown")) return;
+    private recognizeSwipeLeft(evt: IBasicEvent, ptr: IPointer) {
+        if (!this.hasHandlerFor("swipeleft", "swipehorizontal")) return;
 
-        const moves = this._pointer.moves;
-        const sx = Math.abs(moves.speedX);
-        const sy = moves.speedY;
-        if (sy < sx) return;
-
-        const dx = Math.abs(moves.x - moves.startX);
-        const dy = moves.y - moves.startY;
-        if (dy < dx) return;
-
-        this._handlers.pandown({
-            target: this._elem,
-            preventDefault: event.event.preventDefault.bind(event.event),
-            stopPropagation: event.event.stopPropagation.bind(event.event),
-            x: moves.x,
-            y: moves.y
-        })
+        // Check that we are panning left.
+        const moves = ptr.moves;
+        const sx = -moves.speedX;
+        const sy = Math.abs(moves.speedY);
+        if (sx < sy) return;
+        // Check that the final point is beneath the initial one.
+        const dx = moves.startX - moves.x;
+        const dy = Math.abs(moves.y - moves.startY);
+        if (dx < dy) return;
+        // Minimal speed for swipe: 100 pixels/second.
+        const speed = dx / moves.elapsedTime;
+        if (speed < 0.1) return;
+        if (this.hasHandlerFor("swipeleft")) {
+            this.handlers.swipeleft(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
+        if (this.hasHandlerFor("swipehorizontal")) {
+            this.handlers.swipehorizontal(Object.assign(evt, { x: moves.x, y: moves.y }));
+        }
     }
-    */
 }
 
 export default function(elem: HTMLElement): Gesture {

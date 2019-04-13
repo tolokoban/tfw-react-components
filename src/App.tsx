@@ -52,7 +52,7 @@ export default class App extends React.Component<{}, IAppState> {
         return (
             <Sidemenu
                 show={this.state.showmenu}
-                onShowChanged={() => this.setState({ showmenu: !this.state.showmenu })}
+                onShowChange={() => this.setState({ showmenu: !this.state.showmenu })}
                 head="Tolokoban's components"
                 menu={(
                     <div>
@@ -68,9 +68,9 @@ export default class App extends React.Component<{}, IAppState> {
                         <hr />
                         <Flex >{[
                             this.link("button"),
-                            this.link("checkbox"),
+                            this.link("checkbox"),/*
                             this.link("color-button-list"),
-                            this.link("color-button"),
+                            this.link("color-button"),*/
                             this.link("combo"),
                             this.link("icon"),
                             this.link("input"),
