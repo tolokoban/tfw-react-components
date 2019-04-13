@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "644320217d36375b7fe08d1e8f9d1c70",
-    "url": "/tfw-react-components/static/media/words-list.64432021.txt"
+    "revision": "d95fb393b17dd506f2cd89883c371947",
+    "url": "/tfw-react-components/static/media/words-list.d95fb393.txt"
   },
   {
     "revision": "7270440b8ddb42ebfe9fba9297a3563d",
@@ -12,19 +12,19 @@ self.__precacheManifest = [
     "url": "/tfw-react-components/static/js/runtime~main.bf73a621.js"
   },
   {
-    "revision": "77f4585215aa237d7534",
-    "url": "/tfw-react-components/static/js/main.e94d355b.chunk.js"
+    "revision": "525a1c045107064f9b1c",
+    "url": "/tfw-react-components/static/js/main.48d51540.chunk.js"
   },
   {
     "revision": "4c070c0a78693acf92de",
     "url": "/tfw-react-components/static/js/2.5eaf4c01.chunk.js"
   },
   {
-    "revision": "77f4585215aa237d7534",
-    "url": "/tfw-react-components/static/css/main.4193e728.chunk.css"
+    "revision": "525a1c045107064f9b1c",
+    "url": "/tfw-react-components/static/css/main.57317adf.chunk.css"
   },
   {
-    "revision": "7a77436cf410f680122128e4f244adf4",
+    "revision": "125fdba46f9bab7a2a33eb536620ff4c",
     "url": "/tfw-react-components/index.html"
   }
 ];
