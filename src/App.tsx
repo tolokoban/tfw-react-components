@@ -8,6 +8,7 @@ import Button from "./tfw/view/button"
 import PageList from "./page/list"
 import PageIcon from "./page/icon"
 import PageCombo from "./page/combo"
+import PageInput from "./page/input"
 import PageButton from "./page/button"
 import PageCheckbox from "./page/checkbox"
 
@@ -86,6 +87,7 @@ export default class App extends React.Component<{}, IAppState> {
                             <PageButton key="button" />
                             <PageCheckbox key="checkbox" />
                             <PageIcon key="icon" />
+                            <PageInput key="input" />
                             <PageList key="list" />
                         </Stack>
                     </div>
