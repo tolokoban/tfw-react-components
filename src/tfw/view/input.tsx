@@ -16,6 +16,7 @@ interface IStringSlot {
 interface IInputProps {
     label?: string;
     value?: string;
+    wide?: boolean;
     delay?: number;
     size?: number;
     focus?: boolean;
@@ -148,12 +149,15 @@ export default class Input extends React.Component<IInputProps, IInputState> {
             type = castString(p.type, "text"),
             label = castString(p.label, ""),
             value = castString(p.value, ""),
+            wide = castBoolean(p.wide, false),
             size = Math.max(1, castInteger(p.size, 8)),
             error = this.state.error,
             id = nextId();
+        const classes = ["tfw-view-input", "thm-ele-button"];
+        if (wide) classes.push("wide");
         const header = (error ? <div className="thm-bgSD error">{error}</div> :
             (label ? (<label htmlFor={id} className="thm-bgPD">{label}</label>) : null));
-        return (<div className="tfw-view-input thm-ele-button" >
+        return (<div className={classes.join(" ")} >
             {header}
             <input
                 ref={this.input}
