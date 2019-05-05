@@ -4,6 +4,16 @@
 export default {
     register: registerTheme,
     apply: applyTheme,
+    bg0: makeGetCurrentColor("bg0"),
+    bg1: makeGetCurrentColor("bg1"),
+    bg2: makeGetCurrentColor("bg2"),
+    bg3: makeGetCurrentColor("bg3"),
+    bgP: makeGetCurrentColor("bgP"),
+    bgPD: makeGetCurrentColor("bgPD"),
+    bgPL: makeGetCurrentColor("bgPL"),
+    bgS: makeGetCurrentColor("bgS"),
+    bgSD: makeGetCurrentColor("bgSD"),
+    bgSL: makeGetCurrentColor("bgSL"),
     isDark
 };
 
@@ -361,6 +371,10 @@ function isThemeGloballyDark(): boolean {
     );
     vars.$isDark = !average.luminanceStep();
     return vars.$isDark;
+}
+
+function makeGetCurrentColor(colorName: string) : ()=>string {
+    return () => THEMES.vars[THEMES.current || "default"][colorName];
 }
 
 registerTheme("default", { bgP: "#1e90ff" });

@@ -13,6 +13,7 @@ import castString from "./string";
 export default function castStringArray(
     value: any, defaultArray: string[] = [], defaultString: string = ""
 ) {
+    if (typeof value === 'string') return [value];
     if (!Array.isArray(value)) return defaultArray;
     if (typeof defaultString === 'undefined') return value;
     return value.map(item => castString(item, defaultString));

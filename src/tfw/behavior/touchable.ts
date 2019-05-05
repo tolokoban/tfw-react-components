@@ -23,12 +23,13 @@ export default class Touchable {
     _element: HTMLElement | undefined;
     _enabled: boolean = true;
     color: string = "#000";
+    accent: boolean = false;
     onTap: () => void;
 
     constructor(args: IArgs) {
         this.element = args.element;
         this.enabled = castBoolean(args.enabled, true);
-        this.color = castString(args.color, "#000");
+        this.color = castString(args.color, "");
         this.onTap = castFunction(args.onTap);
     }
 
@@ -62,6 +63,17 @@ export default class Touchable {
 
             down(evt) {
                 if (!that.enabled) return;
+            },
+
+            up(evt) {
+                if (!that.removeTouchDisk) return;
+                that.removeTouchDisk();
+                delete that.removeTouchDisk;
+            },
+
+            tap(evt) {
+                if (!that.enabled) return;
+                that.fire(evt);
 
                 const rect = element.getBoundingClientRect();
                 const style = window.getComputedStyle(element);
@@ -78,13 +90,13 @@ export default class Touchable {
                 ripple.style.top = `${y - radius}px`;
                 ripple.style.width = `${2 * radius}px`;
                 ripple.style.height = `${2 * radius}px`;
-                that.color = Theme.isDark() ? "#fff" : "#000";
-                ripple.style.background = that.color;
+                if (that.color.length > 0) {
+                    ripple.style.background = that.color;
+                } else {
+                    ripple.style.background = Theme.isDark() ? "#fff" : "#000";
+                }
                 window.setTimeout(() => ripple.className = "open");
                 window.setTimeout(() => document.body.removeChild(screen), 500);
-            },
-            tap(evt) {
-                that.fire(evt);
             }
         })
     }

@@ -9,6 +9,7 @@ interface ITouchableProps {
     enabled?: boolean;
     onClick?: ()=>void;
     classes?: string[];
+    color?: string;
     children?: React.ReactElement<any>|React.ReactElement<any>[];
 }
 
@@ -19,7 +20,7 @@ export default class Touchable extends React.Component<ITouchableProps, {}> {
     constructor(props: ITouchableProps) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.touchable = new TouchableBehavior({onTap: this.handleClick});
+        this.touchable = new TouchableBehavior({onTap: this.handleClick, color: props.color});
     }
 
     componentDidMount() {
