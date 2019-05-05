@@ -1,10 +1,12 @@
 import * as React from "react"
 import castString from "../converter/string"
 import castBoolean from "../converter/boolean"
+import castStringArray from "../converter/string-array"
 import "./flex.css"
 
 interface IFlexProp {
     wide?: boolean;
+    classes?: string[] | string;
     dir?: "row" | "row-reverse" | "column" | "column-reverse" | "wide" | "narrow";
     wrap?: "nowrap" | "wrap" | "wrap-reverse";
     justifyContent?: "flex-start" | "flex-end" | "center" | "space-around" | "space-between" | "space-evenly";
@@ -23,6 +25,7 @@ export default class Flex extends React.Component<IFlexProp, {}> {
             flexWrap: castString(p.wrap, "wrap")
         };
         const classes = ["tfw-view-flex", `dir-${dir}`];
+        classes.push(...castStringArray(p.classes));
 
         if (wide) classes.push("wide");
 

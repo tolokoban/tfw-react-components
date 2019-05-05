@@ -52,7 +52,6 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         if (!input) return;
         const focus = castBoolean(this.props.focus, false);
         if (focus) {
-            console.log("focus =", input);
             input.focus();
         }
     }
@@ -94,7 +93,6 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                 const value = this.value;
                 if (this.props.type === 'number') {
                     const num = parseFloat(value);
-                    console.log("This is a number:", num, typeof num);
                     slot(num)
                 } else {
                     slot(value)
@@ -110,12 +108,9 @@ export default class Input extends React.Component<IInputProps, IInputState> {
             if (this.props.type !== 'number') return true;
             validator = NUMBER_VALIDATOR;
         }
-        console.log("validator =", validator);
 
         try {
             const result = validator(value);
-            console.log("result =", result);
-
             if (result === true) return true;
             if (typeof result === "string") {
                 this.setState({ error: result });
@@ -127,12 +122,10 @@ export default class Input extends React.Component<IInputProps, IInputState> {
     }
 
     componentDidMount() {
-        console.log("MOUNT");
         this.setFocus();
     }
 
     componentDidUpdate(oldProps: IInputProps) {
-        console.log("UPDATE");
         const
             newProps = this.props,
             input = this.input ? this.input.current : null;

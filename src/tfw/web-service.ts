@@ -53,12 +53,14 @@ class User {
 
     get nickname() { return this._nickname; }
 
+    get roles() { return this._roles.slice(); }
+
     hasRole(role: string): boolean {
         return -1 !== this._roles.indexOf(role);
     }
 }
 
-async function exec(name: string, args: any): Promise<any> {
+async function exec(name: string, args: any = null): Promise<any> {
     const response: ICallResponse = await callService(name, args);
     if (response.code === EnumWebServiceError.OK) {
         const obj = JSON.parse(response.data);
@@ -69,6 +71,7 @@ async function exec(name: string, args: any): Promise<any> {
 }
 
 async function callService(name: string, args: {}): Promise<ICallResponse> {
+    console.log("callServiceName", name, args);
     const data = new FormData();
     data.append("s", name);
     data.append("i", JSON.stringify(args));
