@@ -13,6 +13,17 @@ export default class Intl {
         return instance.translate.bind(instance);
     }
 
+    static toIntl(text: string, lang: string|null = null): { [key: string]: string } {
+        return { [lang || Intl.lang]: text };
+    }
+
+    static toText(intl: { [key: string]: string }|string): string {
+        if( typeof intl === 'string') return intl;
+        const text = intl[Intl.lang];
+        if (typeof text === 'string') return text;
+        return intl[Object.keys(intl)[0]];
+    }
+
     static get lang() { return gCurrentLanguage; }
 
     static set lang(_value: string) {

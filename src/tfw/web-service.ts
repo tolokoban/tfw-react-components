@@ -12,7 +12,11 @@ export default {
      * @param {string} password
      * @return {Promise<User>}
      */
-    login
+    login,
+    /**
+     * Change the web server that will answer our queries.
+     */
+    setRoot
 };
 
 export enum EnumWebServiceError {
@@ -42,6 +46,10 @@ interface ICallResponse {
 const gLastSuccessfulLogin: { username: string, password: string } = {
     username: "", password: ""
 };
+
+// If you want to redirect all the queries to another web server,
+// use setRoot().
+let gRoot = "";
 
 class User {
     constructor(
@@ -76,8 +84,8 @@ async function callService(name: string, args: {}): Promise<ICallResponse> {
     data.append("s", name);
     data.append("i", JSON.stringify(args));
     const
-        url = `tfw/svc.php`,
-        init = { method: "POST", body: data },
+        url = `${gRoot}tfw/svc.php`,
+        init = { method: "POST", body: data, credentials: "include" },
         response = await fetch(url, init);
     if (response.ok) {
         return {
@@ -125,4 +133,12 @@ function hash(code: number[], pwd: string): number[] {
     }
 
     return output;
+}
+
+
+function setRoot(root: string) {
+    gRoot = root.trim();
+    if( gRoot.charAt(gRoot.length-1) !== '/') {
+        gRoot += "/";
+    }
 }

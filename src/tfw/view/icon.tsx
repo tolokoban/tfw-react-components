@@ -53,6 +53,7 @@ export default class Icon extends React.Component<IIconProps, {}> {
         const
             elemIcon = this.refIcon.current,
             visible = this.visible;
+        if( !elemIcon ) return;
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
             this.timeoutHandle = 0;

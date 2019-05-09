@@ -60,7 +60,7 @@ class Dialog {
         const title = castString(opt.title, "").trim();
         const icon = castString(opt.icon, "").trim();
         let footer: React.ReactElement<any> | null =
-            this.footer ? (<footer className="thm-bg1" >{this.footer}</footer>) : null;
+            this.footer ? (<footer className="thm-bg2 thm-ele-button" >{this.footer}</footer>) : null;
         let header = null;
         if (title.length > 0) {
             header = (<header className="thm-bgPD">
@@ -70,7 +70,7 @@ class Dialog {
         }
 
         ReactDOM.render((
-            <div className="thm-ele-dialog thm-bg2" >
+            <div className="thm-ele-dialog thm-bg1" >
                 {header}
                 <div>{opt.content}</div>
                 {footer}
